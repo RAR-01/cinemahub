@@ -1,4 +1,9 @@
 package com.cinemahub.backend.model;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -11,6 +16,10 @@ public class Movie {
     private String title;
     private String genre;
     private double rating;
+
+    @ManyToMany(mappedBy = "movies")
+    @JsonIgnore
+    private List<Theatre> theatres = new ArrayList<>();
     public long getId() {
         return id;
     }
