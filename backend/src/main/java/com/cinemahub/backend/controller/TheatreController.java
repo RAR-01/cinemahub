@@ -13,7 +13,7 @@ import com.cinemahub.backend.model.Theatre;
 import com.cinemahub.backend.service.TheatreService;
 
 @RestController
-@RequestMapping("/api/theatres")
+@RequestMapping("/theatres")
 public class TheatreController {
     private final TheatreService theatreService;
 
