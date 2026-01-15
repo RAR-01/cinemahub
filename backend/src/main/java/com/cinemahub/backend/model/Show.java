@@ -18,6 +18,10 @@ public class Show {
     @JoinColumn(name = "theatre_id", nullable = false)
     private Theatre theatre;
     
+    @ManyToOne
+    @JoinColumn(name = "screen_id", nullable = false)
+    private Screen screen;
+
     @Column(nullable = false)
     private LocalDateTime startTime;
 
@@ -27,9 +31,10 @@ public class Show {
     public Show() {
     }
 
-    public Show(Movie movie, Theatre theatre, LocalDateTime startTime, LocalDateTime endTime) {
+    public Show(Movie movie, Theatre theatre, Screen screen, LocalDateTime startTime, LocalDateTime endTime) {
         this.movie = movie;
         this.theatre = theatre;
+        this.screen = screen;
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -56,6 +61,14 @@ public class Show {
 
     public void setTheatre(Theatre theatre) {
         this.theatre = theatre;
+    }
+    
+    public Screen getScreen() {
+        return screen;
+    }
+
+    public void setScreen(Screen screen) {
+        this.screen = screen;
     }
 
     public LocalDateTime getStartTime() {

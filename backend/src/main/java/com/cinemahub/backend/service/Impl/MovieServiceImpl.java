@@ -1,4 +1,4 @@
-package com.cinemahub.backend.service;
+package com.cinemahub.backend.service.Impl;
 
 import java.util.List;
 
@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.cinemahub.backend.model.Movie;
 import com.cinemahub.backend.repository.MovieRepository;
+import com.cinemahub.backend.service.MovieService;
 
 @Service
 public class MovieServiceImpl implements MovieService {

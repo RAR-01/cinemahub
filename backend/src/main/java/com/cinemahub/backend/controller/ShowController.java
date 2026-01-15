@@ -34,7 +34,7 @@ public class ShowController {
 
     @PostMapping("/movie")
     public List<Show> getShowsByMovie(@RequestBody Movie movie){
-        return showService.getShowsByMoive(movie);
+        return showService.getShowsByMovie(movie);
     }
 
     @PostMapping("/theatre")

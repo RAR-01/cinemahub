@@ -12,7 +12,7 @@ public interface ShowService {
   
   List<Show> getAllShows();
 
-  List<Show> getShowsByMoive(Movie movie);
+  List<Show> getShowsByMovie(Movie movie);
 
   List<Show> getShowsByTheatre(Theatre theatre);
 }

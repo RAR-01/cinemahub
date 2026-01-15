@@ -1,4 +1,4 @@
-package com.cinemahub.backend.service;
+package com.cinemahub.backend.service.Impl;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import com.cinemahub.backend.model.Movie;
 import com.cinemahub.backend.model.Theatre;
 import com.cinemahub.backend.repository.MovieRepository;
 import com.cinemahub.backend.repository.TheatreRepository;
+import com.cinemahub.backend.service.TheatreService;
 
 @Service
 public class TheatreServiceImpl implements TheatreService {
