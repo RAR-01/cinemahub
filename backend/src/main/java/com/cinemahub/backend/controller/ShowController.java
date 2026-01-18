@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cinemahub.backend.dto.ShowRequest;
 import com.cinemahub.backend.model.Movie;
 import com.cinemahub.backend.model.Show;
 import com.cinemahub.backend.model.Theatre;
@@ -23,8 +24,12 @@ public class ShowController {
     }
 
     @PostMapping
-    public Show createShow(@RequestBody Show show){
-        return showService.createShow(show);
+    public Show createShow(@RequestBody ShowRequest request) {
+        return showService.createShow(
+            request.getMovieId(),
+            request.getScreenId(),
+            request.getStartTime()
+            );
     }
 
     @GetMapping

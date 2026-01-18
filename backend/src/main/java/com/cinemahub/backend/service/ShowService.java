@@ -1,5 +1,6 @@
 package com.cinemahub.backend.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.cinemahub.backend.model.Movie;
@@ -8,7 +9,7 @@ import com.cinemahub.backend.model.Theatre;
 
 public interface ShowService {
   
-  Show createShow(Show show);
+  Show createShow(Long movieId, Long screenId, LocalDateTime starTime);
   
   List<Show> getAllShows();
 

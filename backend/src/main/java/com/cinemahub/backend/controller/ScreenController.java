@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.cinemahub.backend.dto.ScreenRequest;
 import com.cinemahub.backend.model.Screen;
 import com.cinemahub.backend.service.ScreenService;
 
@@ -16,8 +17,13 @@ public class ScreenController {
     private ScreenService screenService;
 
     @PostMapping
-    public ResponseEntity<Screen> createScreen(@RequestBody Screen screen) {
-        Screen createdScreen = screenService.createScreen(screen);
+    public ResponseEntity<Screen> createScreen(@RequestBody ScreenRequest request) {
+
+        Screen createdScreen = screenService.createScreen(
+            request.getName(),
+            request.getTheatreId()
+        );
+
         return new ResponseEntity<>(createdScreen, HttpStatus.CREATED);
     }
 

@@ -1,5 +1,7 @@
 package com.cinemahub.backend.model;
 
+import java.time.LocalDateTime;
+
 import com.cinemahub.enums.SeatStatus;
 import com.cinemahub.enums.SeatType;
 
@@ -34,6 +36,12 @@ public class Seat {
     @ManyToOne
     @JoinColumn(name = "screen_id", nullable = false)
     private Screen screen;
+
+    @Column(name = "locked_at")
+    private LocalDateTime lockedAt;
+
+    @Column(name = "lock_expires_at")
+    private LocalDateTime lockExpiresAt;
 
     public Seat() {}
 
@@ -99,6 +107,25 @@ public class Seat {
         this.screen = screen;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getLockedAt() {
+        return lockedAt;
+    }
+
+    public void setLockedAt(LocalDateTime lockedAt) {
+        this.lockedAt = lockedAt;
+    }
+
+    public LocalDateTime getLockExpiresAt() {
+        return lockExpiresAt;
+    }
+
+    public void setLockExpiresAt(LocalDateTime lockExpiresAt) {
+        this.lockExpiresAt = lockExpiresAt;
+    }
     
 }
 

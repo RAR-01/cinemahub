@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cinemahub.backend.model.Screen;
+import com.cinemahub.backend.model.Theatre;
 import com.cinemahub.backend.repository.ScreenRepository;
+import com.cinemahub.backend.repository.TheatreRepository;
 import com.cinemahub.backend.service.ScreenService;
 
 @Service
@@ -14,8 +16,19 @@ public class ScreenServiceImpl implements ScreenService {
     @Autowired
     private ScreenRepository screenRepository;
 
+    @Autowired
+    private TheatreRepository theatreRepository;
+
     @Override
-    public Screen createScreen(Screen screen) {
+    public Screen createScreen(String name, Long theatreId) {
+
+        Theatre theatre = theatreRepository.findById(theatreId)
+            .orElseThrow(() -> new RuntimeException("Theatre not found"));
+
+        Screen screen = new Screen();
+        screen.setName(name);
+        screen.setTheatre(theatre);
+
         return screenRepository.save(screen);
     }
 
@@ -24,5 +37,4 @@ public class ScreenServiceImpl implements ScreenService {
         return screenRepository.findById(screenId)
             .orElseThrow(() -> new RuntimeException("Screen not found"));
     }
-
 }

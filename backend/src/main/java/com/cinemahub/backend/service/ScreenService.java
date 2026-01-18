@@ -4,7 +4,7 @@ import com.cinemahub.backend.model.Screen;
 
 public interface ScreenService {
 
-    Screen createScreen(Screen screen);
+    Screen createScreen(String name, Long theatreId);
 
     Screen getScreenById(Long screenId);
 

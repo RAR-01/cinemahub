@@ -1,29 +1,62 @@
 package com.cinemahub.backend.service.Impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.cinemahub.backend.repository.MovieRepository;
+import com.cinemahub.backend.repository.ScreenRepository;
 import com.cinemahub.backend.repository.ShowRepository;
+import com.cinemahub.backend.repository.TheatreRepository;
 import com.cinemahub.backend.service.ShowSeatService;
 import com.cinemahub.backend.service.ShowService;
 import com.cinemahub.backend.model.*;
 @Service
 public class ShowServiceImpl implements ShowService {
     
-    private final ShowRepository showRepository;
+ private final ShowRepository showRepository;
+    private final MovieRepository movieRepository;
+    private final ScreenRepository screenRepository;
+    private final TheatreRepository theatreRepository;
     private final ShowSeatService showSeatService;
 
-    public ShowServiceImpl(ShowRepository showRepository,
-                            ShowSeatService showSeatService) {
+    public ShowServiceImpl(
+            ShowRepository showRepository,
+            MovieRepository movieRepository,
+            ScreenRepository screenRepository,
+            TheatreRepository theatreRepository,
+            ShowSeatService showSeatService) {
+
         this.showRepository = showRepository;
+        this.movieRepository = movieRepository;
+        this.screenRepository = screenRepository;
+        this.theatreRepository = theatreRepository;
         this.showSeatService = showSeatService;
     }
 
     @Override
-    public Show createShow(Show show){
+    public Show createShow(Long movieId, Long screenId, LocalDateTime startTime) {
+
+        Movie movie = movieRepository.findById(movieId)
+            .orElseThrow(() -> new RuntimeException("Movie not found"));
+
+        Screen screen = screenRepository.findById(screenId)
+            .orElseThrow(() -> new RuntimeException("Screen not found"));
+
+        Theatre theatre = screen.getTheatre(); 
+
+        Show show = new Show();
+        show.setMovie(movie);
+        show.setScreen(screen);
+        show.setTheatre(theatre);
+        show.setStartTime(startTime);
+        show.setEndTime(startTime.plusHours(3));
+
         Show savedShow = showRepository.save(show);
+
         showSeatService.createShowSeats(savedShow);
+
         return savedShow;
     }
 

@@ -75,7 +75,7 @@ public class Show {
         return startTime;
     }
 
-    public void setStarTime(LocalDateTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
