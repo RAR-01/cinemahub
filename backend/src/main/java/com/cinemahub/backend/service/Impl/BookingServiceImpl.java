@@ -119,7 +119,7 @@ public class BookingServiceImpl implements BookingService {
 
         for (Booking booking : expiredBookings) {
             booking.setStatus(BookingStatus.EXPIRED);
-            seatService.releaseSeatsByBookingId(booking.getId());
+            seatService.releaseSeats(booking.getSeats());
         }
 
         bookingRepository.saveAll(expiredBookings);

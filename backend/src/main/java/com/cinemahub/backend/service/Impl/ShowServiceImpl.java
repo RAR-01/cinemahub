@@ -18,7 +18,7 @@ public class ShowServiceImpl implements ShowService {
  private final ShowRepository showRepository;
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
-    private final TheatreRepository theatreRepository;
+    // private final TheatreRepository theatreRepository;
     private final ShowSeatService showSeatService;
 
     public ShowServiceImpl(
@@ -31,7 +31,7 @@ public class ShowServiceImpl implements ShowService {
         this.showRepository = showRepository;
         this.movieRepository = movieRepository;
         this.screenRepository = screenRepository;
-        this.theatreRepository = theatreRepository;
+        // this.theatreRepository = theatreRepository;
         this.showSeatService = showSeatService;
     }
 

@@ -92,9 +92,7 @@ public class SeatServiceImpl implements SeatService {
 
     @Override
     @Transactional
-    public void releaseSeatsByBookingId(Long bookingId) {
-
-        List<Seat> seats = seatRepository.findByBookingId(bookingId);
+    public void releaseSeats(List<Seat> seats) {
 
         for (Seat seat : seats) {
             seat.setSeatStatus(SeatStatus.AVAILABLE);
@@ -104,4 +102,5 @@ public class SeatServiceImpl implements SeatService {
 
         seatRepository.saveAll(seats);
     }
+
 }

@@ -24,8 +24,7 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
     void deleteByScreenId(Long screenId);
 
     List<Seat> findByIdInAndSeatStatus(List<Long> seatIDs, SeatStatus seatStatus);
-    
-    List<Seat> findByBookingId(Long bookingId);
+
 
     @Modifying
     @Query("""
