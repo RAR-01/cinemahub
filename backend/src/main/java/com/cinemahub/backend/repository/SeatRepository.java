@@ -25,6 +25,8 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
 
     List<Seat> findByIdInAndSeatStatus(List<Long> seatIDs, SeatStatus seatStatus);
     
+    List<Seat> findByBookingId(Long bookingId);
+
     @Modifying
     @Query("""
         UPDATE Seat s

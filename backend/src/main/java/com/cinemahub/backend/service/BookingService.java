@@ -8,4 +8,6 @@ public interface BookingService {
     Booking createBooking(Long showId, List<Long> seatIds);
 
     Booking confirmBooking(Long bookingId);
+
+    void expirePendingBookings();
 }

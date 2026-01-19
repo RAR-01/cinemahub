@@ -13,6 +13,8 @@ import com.cinemahub.backend.service.SeatService;
 import com.cinemahub.enums.SeatStatus;
 import com.cinemahub.enums.SeatType;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class SeatServiceImpl implements SeatService {
 
@@ -86,5 +88,20 @@ public class SeatServiceImpl implements SeatService {
                 seatRepository.save(seat);
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public void releaseSeatsByBookingId(Long bookingId) {
+
+        List<Seat> seats = seatRepository.findByBookingId(bookingId);
+
+        for (Seat seat : seats) {
+            seat.setSeatStatus(SeatStatus.AVAILABLE);
+            seat.setLockedAt(null);
+            seat.setLockExpiresAt(null);
+        }
+
+        seatRepository.saveAll(seats);
     }
 }

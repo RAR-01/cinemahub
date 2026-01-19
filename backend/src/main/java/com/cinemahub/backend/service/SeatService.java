@@ -17,4 +17,6 @@ public interface SeatService {
     void deleteSeatsByScreenId(Long screenId);
 
     void generateSeatLayout(Long screenId, int rows, int columns, SeatType seatType);
+
+    void releaseSeatsByBookingId(Long bookingId);
 }

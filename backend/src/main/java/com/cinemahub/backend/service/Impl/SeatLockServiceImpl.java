@@ -25,6 +25,7 @@ public class SeatLockServiceImpl implements SeatLockService{
 
     @Override
     public void lockSeats(List<Long> seatIds) {
+        
         List<Seat> availableSeats = 
                     seatRepository.findByIdInAndSeatStatus(seatIds, SeatStatus.AVAILABLE);
 
