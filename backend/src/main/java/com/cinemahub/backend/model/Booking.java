@@ -28,6 +28,7 @@ public class Booking {
     private List<Seat> seats;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private BookingStatus status;
 
     private LocalDateTime lockedAt;

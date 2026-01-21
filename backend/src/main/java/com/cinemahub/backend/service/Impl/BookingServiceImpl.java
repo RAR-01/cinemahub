@@ -62,7 +62,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = new Booking();
         booking.setShow(show);
         booking.setSeats(seats);
-        booking.setStatus(BookingStatus.LOCKED);
+        booking.setStatus(BookingStatus.PENDING_PAYMENT);
         booking.setLockedAt(LocalDateTime.now());
         booking.setExpiresAt(LocalDateTime.now().plusMinutes(10));
         booking.setCreatedAt(LocalDateTime.now());
@@ -82,14 +82,9 @@ public class BookingServiceImpl implements BookingService {
             return booking;
         }
 
-        if (booking.getStatus() != BookingStatus.LOCKED) {
-            throw new RuntimeException("Booking is not in LOCKED state");
+        if (booking.getStatus() != BookingStatus.PENDING_PAYMENT) {
+            throw new RuntimeException("Booking is not elligible for payment");
         }
-
-        if (booking.getStatus() == BookingStatus.EXPIRED) {
-            throw new RuntimeException("Booking expired");
-        }
-
 
         for (Seat seat : booking.getSeats()) {
             if (seat.getSeatStatus() != SeatStatus.LOCKED) {
@@ -113,12 +108,12 @@ public class BookingServiceImpl implements BookingService {
 
         List<Booking> expiredBookings =
                 bookingRepository.findByStatusAndExpiresAtBefore(
-                        BookingStatus.LOCKED,
+                        BookingStatus.PENDING_PAYMENT,
                         now
                 );
 
         for (Booking booking : expiredBookings) {
-            booking.setStatus(BookingStatus.EXPIRED);
+            booking.setStatus(BookingStatus.CANCELLED);
             seatService.releaseSeats(booking.getSeats());
         }
 

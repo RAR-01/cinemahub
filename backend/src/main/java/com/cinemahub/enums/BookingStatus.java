@@ -2,8 +2,7 @@ package com.cinemahub.enums;
 
 public enum BookingStatus {
     INITIATED,
-    LOCKED,
+    PENDING_PAYMENT,
     CONFIRMED,
-    CANCELLED,
-    EXPIRED
+    CANCELLED
 }
