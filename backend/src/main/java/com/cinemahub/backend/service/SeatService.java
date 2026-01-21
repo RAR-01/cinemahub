@@ -19,4 +19,5 @@ public interface SeatService {
     void generateSeatLayout(Long screenId, int rows, int columns, SeatType seatType);
 
     void releaseSeats(List<Seat> seats);
+    
 }

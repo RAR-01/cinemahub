@@ -1,8 +1,10 @@
 package com.cinemahub.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.cinemahub.backend.dto.PaymentResponse;
 import com.cinemahub.backend.model.Payment;
 import com.cinemahub.backend.service.PaymentService;
 import com.cinemahub.backend.service.DummyPaymentGatewayService;
@@ -18,17 +20,33 @@ public class PaymentController {
     private DummyPaymentGatewayService dummyPaymentGatewayService;
 
     @PostMapping("/initiate/{bookingId}")
-    public Payment initiatePayment(@PathVariable Long bookingId) {
-        return paymentService.initiatePayment(bookingId);
+    public ResponseEntity<PaymentResponse> initiatePayment(
+            @PathVariable Long bookingId) {
+
+        Payment payment = paymentService.initiatePayment(bookingId);
+
+        PaymentResponse response = new PaymentResponse(
+                payment.getId(),
+                payment.getBooking().getId(),
+                payment.getStatus(),
+                payment.getAmount()
+        );
+
+        return ResponseEntity.ok(response);
+    }    
+    
+    @PostMapping("/{paymentId}/success")
+    public ResponseEntity<String> paymentSuccess(@PathVariable Long paymentId) {
+
+        paymentService.handlePaymentSuccess(paymentId);
+        return ResponseEntity.ok("Payment successful");
     }
 
+    @PostMapping("/{paymentId}/failure")
+    public ResponseEntity<String> paymentFailure(@PathVariable Long paymentId) {
 
-    @PostMapping("/pay/{paymentId}")
-    public String pay(
-            @PathVariable Long paymentId,
-            @RequestParam boolean success) {
-
-        dummyPaymentGatewayService.processPayment(paymentId, success);
-        return "Payment processed via dummy gateway";
+        paymentService.handlePaymentFailure(paymentId);
+        return ResponseEntity.ok("Payment failed");
     }
+
 }

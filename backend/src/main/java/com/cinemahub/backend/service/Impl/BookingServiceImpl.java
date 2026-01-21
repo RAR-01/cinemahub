@@ -66,7 +66,17 @@ public class BookingServiceImpl implements BookingService {
         booking.setLockedAt(LocalDateTime.now());
         booking.setExpiresAt(LocalDateTime.now().plusMinutes(10));
         booking.setCreatedAt(LocalDateTime.now());
+        
+        double totalAmount = seats.stream()
+                .mapToDouble(Seat::getPrice)
+                .sum();
+        
+        if (totalAmount <= 0) {
+            throw new RuntimeException("Invalid booking amount");
+        }
 
+        booking.setTotalAmount(totalAmount);
+        
         return bookingRepository.save(booking);
     }
 
@@ -118,5 +128,11 @@ public class BookingServiceImpl implements BookingService {
         }
 
         bookingRepository.saveAll(expiredBookings);
+    }
+
+    @Override
+    public Booking getBookingById(Long bookingId) {
+        return bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
     }
 }

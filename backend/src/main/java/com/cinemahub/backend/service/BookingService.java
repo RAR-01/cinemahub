@@ -10,4 +10,6 @@ public interface BookingService {
     Booking confirmBooking(Long bookingId);
 
     void expirePendingBookings();
+
+    Booking getBookingById(Long bookingId);
 }

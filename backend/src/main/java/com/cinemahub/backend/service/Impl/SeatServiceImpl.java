@@ -24,9 +24,21 @@ public class SeatServiceImpl implements SeatService {
     @Autowired
     private ScreenRepository screenRepository;
 
+    private double getPriceForSeatType(SeatType seatType){
+        return switch (seatType) {
+            case REGULAR -> 150.0;
+            case PREMIUM -> 250.0;
+            case RECLINER -> 400.0;
+        };
+    }
+
     @Override
     public Seat createSeat(Seat seat) {
 
+        if (seat.getPrice() == null) {
+            seat.setPrice(getPriceForSeatType(seat.getSeatType()));
+        } 
+               
         Long screenId = seat.getScreen().getId();
 
         boolean alreadyExists =
@@ -65,6 +77,7 @@ public class SeatServiceImpl implements SeatService {
         Screen screen = screenRepository.findById(screenId)
             .orElseThrow(() -> new RuntimeException("Screen not found"));
 
+        double price = getPriceForSeatType(seatType);
         for (int r = 0; r < rows; r++) {
             char rowLabel = (char) ('A' + r);
 
@@ -82,9 +95,10 @@ public class SeatServiceImpl implements SeatService {
                     c,
                     seatType,
                     SeatStatus.AVAILABLE,
-                    screen
+                    screen,
+                    price
                 );
-
+                seat.setPrice((getPriceForSeatType(seatType)));
                 seatRepository.save(seat);
             }
         }

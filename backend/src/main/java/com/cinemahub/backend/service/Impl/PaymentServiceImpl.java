@@ -48,8 +48,15 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment payment = new Payment();
         payment.setBooking(booking);
-        payment.setAmount(booking.getTotalAmount());
+
+        Double amount = booking.getTotalAmount();
+        if (amount == null) {
+            throw new RuntimeException("Booking total amount is not set");
+        }
+        payment.setAmount(amount);
+
         payment.setStatus(PaymentStatus.INITIATED);
+
 
         LocalDateTime now = LocalDateTime.now();
         payment.setCreatedAt(now);

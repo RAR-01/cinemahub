@@ -43,16 +43,20 @@ public class Seat {
     @Column(name = "lock_expires_at")
     private LocalDateTime lockExpiresAt;
 
+    @Column(nullable = false)
+    private Double price; 
+    
     public Seat() {}
 
     public Seat(String seatNumber, String rowLabel, int columnNumber,
-                SeatType seatType, SeatStatus seatStatus, Screen screen) {
+                SeatType seatType, SeatStatus seatStatus, Screen screen, Double price) {
         this.seatNumber = seatNumber;
         this.rowLabel = rowLabel;
         this.columnNumber = columnNumber;
         this.seatType = seatType;
         this.seatStatus = seatStatus;
         this.screen = screen;
+        this.price = price;
     }
 
     public long getId() {
@@ -125,6 +129,14 @@ public class Seat {
 
     public void setLockExpiresAt(LocalDateTime lockExpiresAt) {
         this.lockExpiresAt = lockExpiresAt;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
     
 }
