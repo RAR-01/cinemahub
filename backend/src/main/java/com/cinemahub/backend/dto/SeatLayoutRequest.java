@@ -2,10 +2,18 @@ package com.cinemahub.backend.dto;
 
 import com.cinemahub.enums.SeatType;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 public class SeatLayoutRequest {
+    
+    @NotNull(message = "Screen ID must not be null")
     private long screenId;
+    @Min(value = 1, message = "Rows must be at least 1")
     private int rows;
+    @Min(value = 1, message = "Columns must be at least 1")
     private int columns;
+    @NotNull(message = "Seat type must not be null")
     private SeatType seatType;
     
     public long getScreenId() {

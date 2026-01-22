@@ -48,9 +48,9 @@ public class BookingController {
         Booking booking = bookingService.confirmBooking(bookingId);
 
         List<Long> seatIds = booking.getSeats()
-                                .stream()
-                                .map(seat -> seat.getId())
-                                .toList();
+                    .stream()
+                    .map(seat -> seat.getId())
+                    .toList();
 
         BookingResponse response = new BookingResponse(
             booking.getId(),

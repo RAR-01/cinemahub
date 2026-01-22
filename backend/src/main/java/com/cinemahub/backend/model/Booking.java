@@ -15,6 +15,10 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    
     @ManyToOne
     @JoinColumn(name = "show_id", nullable = false)
     private Show show;
@@ -105,5 +109,13 @@ public class Booking {
     @PrePersist
     public void onCreate(){
         this.createdAt = LocalDateTime.now();
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

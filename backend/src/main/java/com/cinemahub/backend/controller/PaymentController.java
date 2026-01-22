@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.cinemahub.backend.dto.PaymentResponse;
 import com.cinemahub.backend.model.Payment;
 import com.cinemahub.backend.service.PaymentService;
-import com.cinemahub.backend.service.DummyPaymentGatewayService;
+// import com.cinemahub.backend.service.DummyPaymentGatewayService;
 
 @RestController
 @RequestMapping("/payments")
@@ -16,8 +16,8 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
-    @Autowired
-    private DummyPaymentGatewayService dummyPaymentGatewayService;
+    // @Autowired
+    // private DummyPaymentGatewayService dummyPaymentGatewayService;
 
     @PostMapping("/initiate/{bookingId}")
     public ResponseEntity<PaymentResponse> initiatePayment(

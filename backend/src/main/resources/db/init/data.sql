@@ -92,3 +92,23 @@ VALUES
 (19,'D4', 'D', 4, 'PREMIUM',  'AVAILABLE', 4, 250),
 (20,'D5', 'D', 5, 'RECLINER', 'AVAILABLE', 4, 400);
 
+
+-- ================================
+-- USERS
+-- ================================
+INSERT INTO users (id, name, email, password, created_at)
+VALUES
+(1, 'Rishi Rai', 'rishi@gmail.com', 'password123', NOW());
+
+-- ================================
+-- BOOKINGS
+-- ================================
+INSERT INTO bookings (user_id, show_id, status, total_amount, created_at)
+VALUES (1, 1, 'CONFIRMED', 500.0, NOW());
+
+-- ================================
+-- BOOKING SEATS
+-- ================================
+INSERT INTO booking_seats (booking_id, seat_id)
+VALUES (1, 1), (1, 2);
+

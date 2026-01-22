@@ -4,7 +4,7 @@ import com.cinemahub.enums.SeatStatus;
 import com.cinemahub.enums.SeatType;
 
 public class SeatResponse {
-
+    
     private Long id;
     private String seatNumber;
     private String rowLabel;
