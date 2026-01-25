@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cinemahub.backend.exception.ConflictException;
+import com.cinemahub.backend.exception.ResourceNotFoundException;
 import com.cinemahub.backend.model.Screen;
 import com.cinemahub.backend.model.Seat;
 import com.cinemahub.backend.repository.ScreenRepository;
@@ -37,8 +39,8 @@ public class SeatServiceImpl implements SeatService {
 
         if (seat.getPrice() == null) {
             seat.setPrice(getPriceForSeatType(seat.getSeatType()));
-        } 
-               
+        }
+
         Long screenId = seat.getScreen().getId();
 
         boolean alreadyExists =
@@ -48,7 +50,7 @@ public class SeatServiceImpl implements SeatService {
             );
 
         if (alreadyExists) {
-            throw new RuntimeException(
+            throw new ConflictException(
                 "Seat " + seat.getSeatNumber() + " already exists for this screen"
             );
         }
@@ -75,9 +77,12 @@ public class SeatServiceImpl implements SeatService {
     public void generateSeatLayout(Long screenId, int rows, int columns, SeatType seatType) {
 
         Screen screen = screenRepository.findById(screenId)
-            .orElseThrow(() -> new RuntimeException("Screen not found"));
+            .orElseThrow(() ->
+                new ResourceNotFoundException("Screen not found")
+            );
 
         double price = getPriceForSeatType(seatType);
+
         for (int r = 0; r < rows; r++) {
             char rowLabel = (char) ('A' + r);
 
@@ -98,7 +103,8 @@ public class SeatServiceImpl implements SeatService {
                     screen,
                     price
                 );
-                seat.setPrice((getPriceForSeatType(seatType)));
+
+                seat.setPrice(getPriceForSeatType(seatType));
                 seatRepository.save(seat);
             }
         }
@@ -116,5 +122,4 @@ public class SeatServiceImpl implements SeatService {
 
         seatRepository.saveAll(seats);
     }
-
 }

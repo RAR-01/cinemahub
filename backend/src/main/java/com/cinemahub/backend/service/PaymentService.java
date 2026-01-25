@@ -9,4 +9,6 @@ public interface PaymentService {
     void handlePaymentSuccess(Long paymentId);
 
     void handlePaymentFailure(Long paymentId);
+
+    void expireInitiatedPayments();
 }

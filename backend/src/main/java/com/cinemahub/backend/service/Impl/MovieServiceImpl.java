@@ -4,15 +4,17 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.cinemahub.backend.exception.ResourceNotFoundException;
 import com.cinemahub.backend.model.Movie;
 import com.cinemahub.backend.repository.MovieRepository;
 import com.cinemahub.backend.service.MovieService;
 
 @Service
 public class MovieServiceImpl implements MovieService {
+
     private final MovieRepository movieRepository;
 
-    public MovieServiceImpl (MovieRepository movieRepository){
+    public MovieServiceImpl(MovieRepository movieRepository){
         this.movieRepository = movieRepository;
     }
 
@@ -24,7 +26,9 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie getMovieById(Long id) {
         return movieRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Movie not Found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Movie not found")
+                );
     }
 
     @Override
@@ -43,6 +47,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void deleteMovie(Long id) {
-        movieRepository.deleteById(id);
+        Movie existing = getMovieById(id); // ensures 404 if not found
+        movieRepository.delete(existing);
     }
 }

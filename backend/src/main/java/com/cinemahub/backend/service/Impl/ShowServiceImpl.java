@@ -5,17 +5,22 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.cinemahub.backend.exception.ResourceNotFoundException;
+import com.cinemahub.backend.model.Movie;
+import com.cinemahub.backend.model.Screen;
+import com.cinemahub.backend.model.Show;
+import com.cinemahub.backend.model.Theatre;
 import com.cinemahub.backend.repository.MovieRepository;
 import com.cinemahub.backend.repository.ScreenRepository;
 import com.cinemahub.backend.repository.ShowRepository;
 import com.cinemahub.backend.repository.TheatreRepository;
 import com.cinemahub.backend.service.ShowSeatService;
 import com.cinemahub.backend.service.ShowService;
-import com.cinemahub.backend.model.*;
+
 @Service
 public class ShowServiceImpl implements ShowService {
-    
- private final ShowRepository showRepository;
+
+    private final ShowRepository showRepository;
     private final MovieRepository movieRepository;
     private final ScreenRepository screenRepository;
     // private final TheatreRepository theatreRepository;
@@ -39,12 +44,16 @@ public class ShowServiceImpl implements ShowService {
     public Show createShow(Long movieId, Long screenId, LocalDateTime startTime) {
 
         Movie movie = movieRepository.findById(movieId)
-            .orElseThrow(() -> new RuntimeException("Movie not found"));
+            .orElseThrow(() ->
+                new ResourceNotFoundException("Movie not found")
+            );
 
         Screen screen = screenRepository.findById(screenId)
-            .orElseThrow(() -> new RuntimeException("Screen not found"));
+            .orElseThrow(() ->
+                new ResourceNotFoundException("Screen not found")
+            );
 
-        Theatre theatre = screen.getTheatre(); 
+        Theatre theatre = screen.getTheatre();
 
         Show show = new Show();
         show.setMovie(movie);

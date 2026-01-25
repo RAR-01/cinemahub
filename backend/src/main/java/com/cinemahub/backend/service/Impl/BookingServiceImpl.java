@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.cinemahub.backend.exception.ConflictException;
+import com.cinemahub.backend.exception.ResourceNotFoundException;
 import com.cinemahub.backend.model.Booking;
 import com.cinemahub.backend.model.Seat;
 import com.cinemahub.backend.model.Show;
@@ -49,12 +51,14 @@ public class BookingServiceImpl implements BookingService {
         expirePendingBookings();
 
         Show show = showRepository.findById(showId)
-                .orElseThrow(() -> new RuntimeException("Show not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Show not found")
+                );
 
         List<Seat> seats = seatRepository.findAllById(seatIds);
 
         if (seats.size() != seatIds.size()) {
-            throw new RuntimeException("One or more seats not found");
+            throw new ResourceNotFoundException("One or more seats not found");
         }
 
         seatLockService.lockSeats(seatIds);
@@ -72,7 +76,7 @@ public class BookingServiceImpl implements BookingService {
                 .sum();
         
         if (totalAmount <= 0) {
-            throw new RuntimeException("Invalid booking amount");
+            throw new ConflictException("Invalid booking amount");
         }
 
         booking.setTotalAmount(totalAmount);
@@ -86,19 +90,21 @@ public class BookingServiceImpl implements BookingService {
         expirePendingBookings();
 
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Booking not found")
+                );
 
         if (booking.getStatus() == BookingStatus.CONFIRMED) {
             return booking;
         }
 
         if (booking.getStatus() != BookingStatus.PENDING_PAYMENT) {
-            throw new RuntimeException("Booking is not elligible for payment");
+            throw new ConflictException("Booking is not eligible for payment");
         }
 
         for (Seat seat : booking.getSeats()) {
             if (seat.getSeatStatus() != SeatStatus.LOCKED) {
-                throw new RuntimeException("Seat lock lost");
+                throw new ConflictException("Seat lock lost");
             }
         }
 
@@ -133,6 +139,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking getBookingById(Long bookingId) {
         return bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Booking not found")
+                );
     }
 }

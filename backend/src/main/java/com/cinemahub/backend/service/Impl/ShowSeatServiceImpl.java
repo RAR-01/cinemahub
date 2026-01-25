@@ -14,6 +14,7 @@ import com.cinemahub.enums.SeatStatus;
 
 @Service
 public class ShowSeatServiceImpl implements ShowSeatService {
+
     private final ShowSeatRepository showSeatRepository;
 
     public ShowSeatServiceImpl(ShowSeatRepository showSeatRepository){
@@ -21,9 +22,9 @@ public class ShowSeatServiceImpl implements ShowSeatService {
     }
 
     @Override
-    public List<ShowSeat> createShowSeats (Show show){
+    public List<ShowSeat> createShowSeats(Show show) {
+
         List<ShowSeat> showSeats = new ArrayList<>();
-        
         List<Seat> seats = show.getScreen().getSeats();
 
         for (Seat seat : seats) {
@@ -34,10 +35,11 @@ public class ShowSeatServiceImpl implements ShowSeatService {
             );
             showSeats.add(showSeat);
         }
+
         return showSeatRepository.saveAll(showSeats);
     }
 
-    @Override 
+    @Override
     public List<ShowSeat> getShowSeatsByShow(Show show){
         return showSeatRepository.findByShow(show);
     }

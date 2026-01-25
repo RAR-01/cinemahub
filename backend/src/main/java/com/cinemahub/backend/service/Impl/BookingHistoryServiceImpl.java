@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.cinemahub.backend.dto.BookingHistoryDTO;
+import com.cinemahub.backend.exception.ConflictException;
+import com.cinemahub.backend.exception.ResourceNotFoundException;
 import com.cinemahub.backend.model.Booking;
 import com.cinemahub.backend.model.Seat;
 import com.cinemahub.backend.model.User;
@@ -28,56 +30,50 @@ public class BookingHistoryServiceImpl implements BookingHistoryService {
         this.userRepository = userRepository;
     }
 
-    // -------------------------------
-    // GET ALL BOOKINGS OF A USER
-    // -------------------------------
     @Override
     public List<BookingHistoryDTO> getBookingsByUserId(Long userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found")
+                );
 
         List<Booking> bookings = bookingRepository.findByUser(user);
 
         List<BookingHistoryDTO> response = new ArrayList<>();
 
-        bookings.sort((b1, b2) -> 
+        bookings.sort((b1, b2) ->
                 b2.getCreatedAt().compareTo(b1.getCreatedAt()));
 
         for (Booking booking : bookings) {
 
-                if (!isValidForHistory(booking)) {
+            if (!isValidForHistory(booking)) {
                 continue;
-                }
+            }
 
-                BookingHistoryDTO dto = mapToDTO(booking);
-                response.add(dto);
+            BookingHistoryDTO dto = mapToDTO(booking);
+            response.add(dto);
         }
 
         return response;
     }
 
-
-    // -------------------------------
-    // GET SINGLE BOOKING DETAILS
-    // -------------------------------
     @Override
     public BookingHistoryDTO getBookingDetails(Long bookingId, Long userId) {
 
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Booking not found")
+                );
 
-        // ownership check (VERY IMPORTANT)
+
         if (!booking.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Unauthorized access to booking");
+            throw new ConflictException("Unauthorized access to booking");
         }
 
         return mapToDTO(booking);
     }
 
-    // -------------------------------
-    // PRIVATE HELPERS
-    // -------------------------------
 
     private boolean isValidForHistory(Booking booking) {
         return booking.getStatus() == BookingStatus.CONFIRMED

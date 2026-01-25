@@ -2,9 +2,12 @@ package com.cinemahub.backend.service.Impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cinemahub.backend.exception.ConflictException;
+import com.cinemahub.backend.exception.ResourceNotFoundException;
 import com.cinemahub.backend.model.Booking;
 import com.cinemahub.backend.model.Payment;
 import com.cinemahub.backend.model.Seat;
@@ -35,15 +38,17 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment initiatePayment(Long bookingId) {
 
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Booking not found")
+                );
 
         if (booking.getStatus() != BookingStatus.PENDING_PAYMENT) {
-            throw new RuntimeException("Booking not eligible for payment");
+            throw new ConflictException("Booking not eligible for payment");
         }
 
         if (paymentRepository.existsByBookingIdAndStatus(
                 bookingId, PaymentStatus.SUCCESS)) {
-            throw new RuntimeException("Payment already completed");
+            throw new ConflictException("Payment already completed");
         }
 
         Payment payment = new Payment();
@@ -51,12 +56,11 @@ public class PaymentServiceImpl implements PaymentService {
 
         Double amount = booking.getTotalAmount();
         if (amount == null) {
-            throw new RuntimeException("Booking total amount is not set");
+            throw new ConflictException("Booking total amount is not set");
         }
         payment.setAmount(amount);
 
         payment.setStatus(PaymentStatus.INITIATED);
-
 
         LocalDateTime now = LocalDateTime.now();
         payment.setCreatedAt(now);
@@ -70,14 +74,14 @@ public class PaymentServiceImpl implements PaymentService {
     public void handlePaymentSuccess(Long paymentId) {
 
         Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new RuntimeException("Payment not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Payment not found")
+                );
 
-        
         if (payment.getStatus() != PaymentStatus.INITIATED) {
-            throw new RuntimeException("Invalid payment state");
+            throw new ConflictException("Invalid payment state");
         }
 
-        
         if (payment.getExpiresAt() != null &&
                 payment.getExpiresAt().isBefore(LocalDateTime.now())) {
             handlePaymentFailure(paymentId);
@@ -87,10 +91,9 @@ public class PaymentServiceImpl implements PaymentService {
         Booking booking = payment.getBooking();
 
         if (booking.getStatus() != BookingStatus.PENDING_PAYMENT) {
-            throw new RuntimeException("Booking no longer valid");
+            throw new ConflictException("Booking no longer valid");
         }
 
-        
         payment.setStatus(PaymentStatus.SUCCESS);
         payment.setUpdatedAt(LocalDateTime.now());
 
@@ -108,10 +111,12 @@ public class PaymentServiceImpl implements PaymentService {
     public void handlePaymentFailure(Long paymentId) {
 
         Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new RuntimeException("Payment not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Payment not found")
+                );
 
         if (payment.getStatus() != PaymentStatus.INITIATED) {
-            throw new RuntimeException("Invalid payment state");
+            throw new ConflictException("Invalid payment state");
         }
 
         Booking booking = payment.getBooking();
@@ -127,14 +132,16 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
         bookingRepository.save(booking);
     }
-    
+
+    @Override
     public void expireInitiatedPayments() {
 
         LocalDateTime now = LocalDateTime.now();
 
         List<Payment> expiredPayments =
                 paymentRepository.findByStatusAndExpiresAtBefore(
-                        PaymentStatus.INITIATED, now);
+                        PaymentStatus.INITIATED, now
+                );
 
         for (Payment payment : expiredPayments) {
 
@@ -148,7 +155,7 @@ public class PaymentServiceImpl implements PaymentService {
                 seatService.releaseSeats(booking.getSeats());
             }
         }
+
         paymentRepository.saveAll(expiredPayments);
     }
-
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.cinemahub.backend.dto.UserRequestDTO;
 import com.cinemahub.backend.dto.UserResponseDTO;
+import com.cinemahub.backend.exception.ConflictException;
 import com.cinemahub.backend.model.User;
 import com.cinemahub.backend.repository.UserRepository;
 import com.cinemahub.backend.service.UserService;
@@ -22,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
         // 1. Check if email already exists
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already registered");
+            throw new ConflictException("Email already registered");
         }
 
         // 2. Map DTO -> Entity
