@@ -1,10 +1,13 @@
+import MovieList from "../components/movie/MovieList";
+
+
 function Home() {
     return (
         <div>
-            <h2>Welcome to Cinemahun</h2>
-            <p>Select a movie to continue</p>
+            <h2>Now Showing 🎬</h2>
+            <MovieList/>
         </div>
     );
-}
+};
 
 export default Home;
