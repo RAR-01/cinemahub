@@ -20,6 +20,16 @@ public class Movie {
     @ManyToMany(mappedBy = "movies")
     @JsonIgnore
     private List<Theatre> theatres = new ArrayList<>();
+        
+    public Movie() {
+    }
+
+    public Movie(String title, String genre, double rating) {
+        this.title = title;
+        this.genre = genre;
+        this.rating = rating;
+    }
+
     public long getId() {
         return id;
     }
@@ -44,6 +54,5 @@ public class Movie {
     public void setRating(double rating) {
         this.rating = rating;
     }
-
     
 }

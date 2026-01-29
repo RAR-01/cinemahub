@@ -9,37 +9,74 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cinemahub.backend.dto.TheatreDto;
 import com.cinemahub.backend.model.Theatre;
 import com.cinemahub.backend.service.TheatreService;
 
 @RestController
 @RequestMapping("/theatres")
 public class TheatreController {
+
     private final TheatreService theatreService;
 
-    public TheatreController(TheatreService theatreService){
-        this.theatreService= theatreService;
+    public TheatreController(TheatreService theatreService) {
+        this.theatreService = theatreService;
     }
 
+    // CREATE theatre
     @PostMapping
-    public Theatre addTheatre(@RequestBody Theatre theatre){
-        return theatreService.addTheatre(theatre);
+    public TheatreDto addTheatre(@RequestBody TheatreDto dto) {
+
+        Theatre theatre = new Theatre();
+        theatre.setName(dto.getName());
+        theatre.setCity(dto.getCity());
+
+        Theatre saved = theatreService.addTheatre(theatre);
+
+        return new TheatreDto(
+                saved.getId(),
+                saved.getName(),
+                saved.getCity()
+        );
     }
 
+    // ADD movie to theatre
     @PostMapping("/{theatreId}/movies/{movieId}")
-    public Theatre addMovieToTheatre(
-        @PathVariable Long theatreId,
-        @PathVariable Long movieId) {
-            return theatreService.addMovieToTheatre(theatreId, movieId);
+    public TheatreDto addMovieToTheatre(
+            @PathVariable Long theatreId,
+            @PathVariable Long movieId) {
+
+        Theatre theatre = theatreService.addMovieToTheatre(theatreId, movieId);
+
+        return new TheatreDto(
+                theatre.getId(),
+                theatre.getName(),
+                theatre.getCity()
+        );
     }
 
+    // GET all theatres
     @GetMapping
-    public List<Theatre> getAllTheatres(){
-        return theatreService.getAllTheatres();
+    public List<TheatreDto> getAllTheatres() {
+        return theatreService.getAllTheatres()
+                .stream()
+                .map(theatre -> new TheatreDto(
+                        theatre.getId(),
+                        theatre.getName(),
+                        theatre.getCity()
+                ))
+                .toList();
     }
 
+    // GET theatre by id
     @GetMapping("/{id}")
-    public Theatre getTheatreById(@PathVariable Long id){
-        return theatreService.getTheatreById(id);
+    public TheatreDto getTheatreById(@PathVariable Long id) {
+        Theatre theatre = theatreService.getTheatreById(id);
+        return new TheatreDto(
+                theatre.getId(),
+                theatre.getName(),
+                theatre.getCity()
+        );
     }
 }
+

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cinemahub.backend.dto.SeatLayoutRequest;
 import com.cinemahub.backend.dto.SeatResponse;
-import com.cinemahub.backend.model.Seat;
 import com.cinemahub.backend.service.SeatLockService;
 import com.cinemahub.backend.service.SeatService;
 
@@ -26,13 +25,6 @@ public class SeatController {
 
     @Autowired
     private SeatLockService seatLockService;
-
-    // Kept for admin/testing purposes only
-    // (Normally seats are generated via layout)
-    @PostMapping
-    public Seat createSeat(@RequestBody Seat seat) {
-        return seatService.createSeat(seat);
-    }
 
     // Generate seat layout
     @PostMapping("/layout")

@@ -2,15 +2,9 @@ package com.cinemahub.backend.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import com.cinemahub.backend.dto.MovieDto;
 import com.cinemahub.backend.model.Movie;
 import com.cinemahub.backend.service.MovieService;
 
@@ -24,30 +18,76 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    // GET all movies
     @GetMapping
-    public List<Movie> getAllMovies() {
-        return movieService.getAllMovies();
+    public List<MovieDto> getAllMovies() {
+        return movieService.getAllMovies()
+                .stream()
+                .map(movie -> new MovieDto(
+                        movie.getId(),
+                        movie.getTitle(),
+                        movie.getGenre(),
+                        movie.getRating()
+                ))
+                .toList();
     }
 
+    // GET movie by id
     @GetMapping("/{id}")
-    public Movie getMovie(@PathVariable Long id) {
-        return movieService.getMovieById(id);
+    public MovieDto getMovieById(@PathVariable Long id) {
+        Movie movie = movieService.getMovieById(id);
+        return new MovieDto(
+                movie.getId(),
+                movie.getTitle(),
+                movie.getGenre(),
+                movie.getRating()
+        );
     }
 
+    // CREATE movie
     @PostMapping
-    public Movie createMovie(@RequestBody Movie movie) {
-        return movieService.createMovie(movie);
+    public MovieDto createMovie(@RequestBody MovieDto dto) {
+        Movie movie = new Movie(
+                dto.getTitle(),
+                dto.getGenre(),
+                dto.getRating()
+        );
+
+        Movie savedMovie = movieService.createMovie(movie);
+
+        return new MovieDto(
+                savedMovie.getId(),
+                savedMovie.getTitle(),
+                savedMovie.getGenre(),
+                savedMovie.getRating()
+        );
     }
 
+    // UPDATE movie
     @PutMapping("/{id}")
-    public Movie updateMovie(@PathVariable Long id,
-                             @RequestBody Movie movie) {
-        return movieService.updateMovie(id, movie);
+    public MovieDto updateMovie(
+            @PathVariable Long id,
+            @RequestBody MovieDto dto
+    ) {
+        Movie movie = new Movie(
+                dto.getTitle(),
+                dto.getGenre(),
+                dto.getRating()
+        );
+
+        Movie updatedMovie = movieService.updateMovie(id, movie);
+
+        return new MovieDto(
+                updatedMovie.getId(),
+                updatedMovie.getTitle(),
+                updatedMovie.getGenre(),
+                updatedMovie.getRating()
+        );
     }
 
+    // DELETE movie
     @DeleteMapping("/{id}")
     public void deleteMovie(@PathVariable Long id) {
         movieService.deleteMovie(id);
     }
 }
-
