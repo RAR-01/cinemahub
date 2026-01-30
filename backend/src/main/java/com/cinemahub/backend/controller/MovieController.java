@@ -18,7 +18,7 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    // GET all movies
+
     @GetMapping
     public List<MovieDto> getAllMovies() {
         return movieService.getAllMovies()
@@ -32,7 +32,7 @@ public class MovieController {
                 .toList();
     }
 
-    // GET movie by id
+
     @GetMapping("/{id}")
     public MovieDto getMovieById(@PathVariable Long id) {
         Movie movie = movieService.getMovieById(id);
@@ -44,7 +44,7 @@ public class MovieController {
         );
     }
 
-    // CREATE movie
+
     @PostMapping
     public MovieDto createMovie(@RequestBody MovieDto dto) {
         Movie movie = new Movie(
@@ -63,7 +63,7 @@ public class MovieController {
         );
     }
 
-    // UPDATE movie
+
     @PutMapping("/{id}")
     public MovieDto updateMovie(
             @PathVariable Long id,
@@ -85,7 +85,7 @@ public class MovieController {
         );
     }
 
-    // DELETE movie
+
     @DeleteMapping("/{id}")
     public void deleteMovie(@PathVariable Long id) {
         movieService.deleteMovie(id);

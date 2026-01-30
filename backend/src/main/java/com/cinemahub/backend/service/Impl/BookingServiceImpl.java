@@ -2,6 +2,7 @@ package com.cinemahub.backend.service.Impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import com.cinemahub.enums.BookingStatus;
 import com.cinemahub.enums.SeatStatus;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotNull;
 
 @Service
 @Transactional
@@ -46,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking createBooking(Long showId, List<Long> seatIds) {
+    public Booking createBooking(@NotNull Long showId, @NotNull List<Long> seatIds) {
 
         expirePendingBookings();
 
@@ -55,7 +57,10 @@ public class BookingServiceImpl implements BookingService {
                         new ResourceNotFoundException("Show not found")
                 );
 
-        List<Seat> seats = seatRepository.findAllById(seatIds);
+        Iterable<Seat> seatIterable = seatRepository.findAllById(seatIds);
+        List<Seat> seats = StreamSupport
+                .stream(seatIterable.spliterator(), false)
+                .toList();
 
         if (seats.size() != seatIds.size()) {
             throw new ResourceNotFoundException("One or more seats not found");
