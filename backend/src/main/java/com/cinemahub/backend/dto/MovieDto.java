@@ -8,7 +8,7 @@ public class MovieDto {
     private Double rating;
 
     public MovieDto() {
-        // Required for Jackson
+  
     }
 
     public MovieDto(Long id, String title, String genre, Double rating) {
@@ -18,7 +18,6 @@ public class MovieDto {
         this.rating = rating;
     }
 
-    // Getters
 
     public Long getId() {
         return id;

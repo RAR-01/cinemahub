@@ -23,7 +23,7 @@ public class TheatreController {
         this.theatreService = theatreService;
     }
 
-    // CREATE theatre
+ 
     @PostMapping
     public TheatreDto addTheatre(@RequestBody TheatreDto dto) {
 
@@ -40,7 +40,7 @@ public class TheatreController {
         );
     }
 
-    // ADD movie to theatre
+ 
     @PostMapping("/{theatreId}/movies/{movieId}")
     public TheatreDto addMovieToTheatre(
             @PathVariable Long theatreId,
@@ -55,7 +55,7 @@ public class TheatreController {
         );
     }
 
-    // GET all theatres
+
     @GetMapping
     public List<TheatreDto> getAllTheatres() {
         return theatreService.getAllTheatres()
@@ -68,7 +68,7 @@ public class TheatreController {
                 .toList();
     }
 
-    // GET theatre by id
+
     @GetMapping("/{id}")
     public TheatreDto getTheatreById(@PathVariable Long id) {
         Theatre theatre = theatreService.getTheatreById(id);

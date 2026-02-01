@@ -25,7 +25,7 @@ public class ShowController {
         this.showService = showService;
     }
 
-    // CREATE show
+
     @PostMapping
     public ShowDto createShow(@RequestBody ShowDto dto) {
 
@@ -45,7 +45,6 @@ public class ShowController {
         );
     }
 
-    // GET all shows
     @GetMapping
     public List<ShowDto> getAllShows() {
         return showService.getAllShows()
@@ -61,7 +60,7 @@ public class ShowController {
                 .toList();
     }
 
-    // GET shows by movie (service expects Movie)
+
     @GetMapping("/movie/{movieId}")
     public List<ShowDto> getShowsByMovie(@PathVariable Long movieId) {
 
@@ -81,7 +80,6 @@ public class ShowController {
                 .toList();
     }
 
-    // GET shows by theatre (service expects Theatre)
     @GetMapping("/theatre/{theatreId}")
     public List<ShowDto> getShowsByTheatre(@PathVariable Long theatreId) {
 

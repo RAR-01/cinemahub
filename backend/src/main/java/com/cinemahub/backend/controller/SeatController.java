@@ -26,7 +26,6 @@ public class SeatController {
     @Autowired
     private SeatLockService seatLockService;
 
-    // Generate seat layout
     @PostMapping("/layout")
     public String generateSeatLayout(@RequestBody SeatLayoutRequest request) {
         seatService.generateSeatLayout(
@@ -38,14 +37,12 @@ public class SeatController {
         return "Seat layout generated successfully";
     }
 
-    // Lock seats (used internally by booking flow)
     @PostMapping("/lock")
     public String lockSeats(@RequestBody List<Long> seatIds) {
         seatLockService.lockSeats(seatIds);
         return "Seats locked successfully";
     }
 
-    // GET ALL SEATS (DTO-based, CLEAN RESPONSE)
     @GetMapping
     public List<SeatResponse> getAllSeats() {
         return seatService.getAllSeats()
@@ -62,7 +59,6 @@ public class SeatController {
                 .toList();
     }
 
-    // GET SEATS BY SCREEN (DTO-based)
     @GetMapping("/screen/{screenId}")
     public List<SeatResponse> getSeatsByScreen(@PathVariable Long screenId) {
         return seatService.getSeatsByScreenId(screenId)
