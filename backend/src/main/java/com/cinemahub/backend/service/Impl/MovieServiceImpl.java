@@ -47,7 +47,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void deleteMovie(Long id) {
-        Movie existing = getMovieById(id); // ensures 404 if not found
+        Movie existing = getMovieById(id);
         movieRepository.delete(existing);
     }
 }
