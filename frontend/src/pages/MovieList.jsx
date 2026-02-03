@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import api from "../api/axios";
 import MovieCard from "../components/movie/MovieCard";
+import { getAllMovies } from '../api/movieApi';
 
 function MovieList() {
     
@@ -10,12 +10,12 @@ function MovieList() {
 
     
     useEffect(() => {
-        api.get("/movies")
+        getAllMovies()
             .then(res => {
                 setMovies(res.data);
                 setLoading(false);
             })
-            .catch(err => {
+            .catch(() => {
                 setError("Failed to load movies");
                 setLoading(false);
             });

@@ -16,7 +16,7 @@ const MovieCard = ({ movie }) => {
         >
             <h3>{movie.title}</h3>
             <p><b>Genre:</b> {movie.genre}</p>
-            <p><b>Rating:</b> ⭐ {movie.duration}</p>
+            <p><b>Rating:</b> ⭐ {movie.rating}</p>
         </div>
     );
 };
