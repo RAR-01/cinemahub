@@ -8,7 +8,7 @@ const MovieCard = ({ movie }) => {
         <div
             onClick={() => navigate(`/movies/${movie.id}`)}
             style={{
-                border: "1px solid #34a5c8",
+                border: "1px solid #1c718b",
                 padding: "10px",
                 width: "200px",
                 cursor: "pointer"
