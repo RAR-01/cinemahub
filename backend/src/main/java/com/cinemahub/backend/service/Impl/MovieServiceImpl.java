@@ -14,12 +14,12 @@ public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
 
-    public MovieServiceImpl(MovieRepository movieRepository){
+    public MovieServiceImpl(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
     }
 
     @Override
-    public List<Movie> getAllMovies(){
+    public List<Movie> getAllMovies() {
         return movieRepository.findAll();
     }
 
@@ -37,11 +37,16 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Movie updateMovie(Long id, Movie movie){
+    public Movie updateMovie(Long id, Movie movie) {
         Movie existing = getMovieById(id);
+
         existing.setTitle(movie.getTitle());
         existing.setGenre(movie.getGenre());
         existing.setRating(movie.getRating());
+        existing.setDescription(movie.getDescription());
+        existing.setDuration(movie.getDuration());
+        existing.setLanguage(movie.getLanguage());
+
         return movieRepository.save(existing);
     }
 

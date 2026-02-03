@@ -18,7 +18,6 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-
     @GetMapping
     public List<MovieDto> getAllMovies() {
         return movieService.getAllMovies()
@@ -27,11 +26,13 @@ public class MovieController {
                         movie.getId(),
                         movie.getTitle(),
                         movie.getGenre(),
-                        movie.getRating()
+                        movie.getRating(),
+                        movie.getDescription(),
+                        movie.getDuration(),
+                        movie.getLanguage()
                 ))
                 .toList();
     }
-
 
     @GetMapping("/{id}")
     public MovieDto getMovieById(@PathVariable Long id) {
@@ -40,17 +41,22 @@ public class MovieController {
                 movie.getId(),
                 movie.getTitle(),
                 movie.getGenre(),
-                movie.getRating()
+                movie.getRating(),
+                movie.getDescription(),
+                movie.getDuration(),
+                movie.getLanguage()
         );
     }
-
 
     @PostMapping
     public MovieDto createMovie(@RequestBody MovieDto dto) {
         Movie movie = new Movie(
                 dto.getTitle(),
                 dto.getGenre(),
-                dto.getRating()
+                dto.getRating(),
+                dto.getDescription(),
+                dto.getDuration(),
+                dto.getLanguage()
         );
 
         Movie savedMovie = movieService.createMovie(movie);
@@ -59,10 +65,12 @@ public class MovieController {
                 savedMovie.getId(),
                 savedMovie.getTitle(),
                 savedMovie.getGenre(),
-                savedMovie.getRating()
+                savedMovie.getRating(),
+                savedMovie.getDescription(),
+                savedMovie.getDuration(),
+                savedMovie.getLanguage()
         );
     }
-
 
     @PutMapping("/{id}")
     public MovieDto updateMovie(
@@ -72,7 +80,10 @@ public class MovieController {
         Movie movie = new Movie(
                 dto.getTitle(),
                 dto.getGenre(),
-                dto.getRating()
+                dto.getRating(),
+                dto.getDescription(),
+                dto.getDuration(),
+                dto.getLanguage()
         );
 
         Movie updatedMovie = movieService.updateMovie(id, movie);
@@ -81,10 +92,12 @@ public class MovieController {
                 updatedMovie.getId(),
                 updatedMovie.getTitle(),
                 updatedMovie.getGenre(),
-                updatedMovie.getRating()
+                updatedMovie.getRating(),
+                updatedMovie.getDescription(),
+                updatedMovie.getDuration(),
+                updatedMovie.getLanguage()
         );
     }
-
 
     @DeleteMapping("/{id}")
     public void deleteMovie(@PathVariable Long id) {

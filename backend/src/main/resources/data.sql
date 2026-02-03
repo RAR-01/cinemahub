@@ -9,10 +9,27 @@ VALUES
 -- ================================
 -- MOVIES
 -- ================================
-INSERT INTO movies (id, title, genre, rating)
+INSERT INTO movies (id, title, genre, rating, description, duration, language)
 VALUES
-(1, 'Interstellar', 'Sci-Fi', 8.6),
-(2, 'Inception', 'Sci-Fi', 8.8);
+(
+  1,
+  'Interstellar',
+  'Sci-Fi',
+  8.6,
+  'A team of explorers travel through a wormhole in space to ensure humanity’s survival.',
+  169,
+  'English'
+),
+(
+  2,
+  'Inception',
+  'Sci-Fi',
+  8.8,
+  'A skilled thief enters dreams to steal and manipulate secrets.',
+  148,
+  'English'
+);
+
 
 -- ================================
 -- THEATRE_MOVIES (Many-to-Many)
