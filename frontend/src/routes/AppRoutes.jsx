@@ -2,7 +2,7 @@ import { Routes, Route} from "react-router-dom";
 import Home from "../pages/Home";
 import MovieDetails from "../pages/MovieDetails";
 import MovieList from "../pages/MovieList";
-
+import TheatreList from "../pages/TheatreList";
 
 const AppRoutes = () => {
     return (
@@ -10,6 +10,7 @@ const AppRoutes = () => {
             <Route path = "/" element = {<Home />} />
             <Route path ="/movies" element={<MovieList />} />
             <Route path = "/movies/:movieId" element = {<MovieDetails />} />
+            <Route path = "/movies/:movieId/theatres" element={<TheatreList />} />
         </Routes>
     );
 };

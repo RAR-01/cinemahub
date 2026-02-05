@@ -78,5 +78,18 @@ public class TheatreController {
                 theatre.getCity()
         );
     }
+    
+    @GetMapping("/movies/{movieId}")
+    public List<TheatreDto> getTheatresByMovie(@PathVariable Long movieId) {
+        return theatreService.getTheatresByMovieId(movieId)
+            .stream()
+            .map(theatre -> new TheatreDto(
+                    theatre.getId(),
+                    theatre.getName(),
+                    theatre.getCity()
+            ))
+            .toList();
+    }
+
 }
 

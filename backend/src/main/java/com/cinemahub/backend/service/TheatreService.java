@@ -12,4 +12,6 @@ public interface TheatreService {
     Theatre getTheatreById(Long id);
 
     Theatre addMovieToTheatre(Long theatreId, Long movieId);
+
+    List<Theatre> getTheatresByMovieId(Long movieId);
 }

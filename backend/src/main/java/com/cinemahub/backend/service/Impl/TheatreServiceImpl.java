@@ -57,4 +57,15 @@ public class TheatreServiceImpl implements TheatreService {
         theatre.getMovies().add(movie);
         return theatreRepository.save(theatre);
     }
+
+    @Override
+    public List<Theatre> getTheatresByMovieId(Long movieId) {
+
+        if (!movieRepository.existsById(movieId)) {
+            throw new ResourceNotFoundException("Movie not found");
+        }
+
+        return theatreRepository.findByMovies_Id(movieId);
+    }
+
 }
