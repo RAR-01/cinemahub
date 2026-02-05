@@ -1,13 +1,9 @@
-import MovieList from "../components/movie/MovieList";
+import MovieList from "./MovieList";
 
 
 function Home() {
-    return (
-        <div>
-            <h2>Now Showing 🎬</h2>
-            <MovieList/>
-        </div>
-    );
-};
+  return <MovieList />;
+}
+
 
 export default Home;

@@ -9,7 +9,17 @@ VALUES
 -- ================================
 -- MOVIES
 -- ================================
-INSERT INTO movies (id, title, genre, rating, description, duration, language)
+INSERT INTO movies (
+  id,
+  title,
+  genre,
+  rating,
+  description,
+  duration,
+  language,
+  tmdb_id,
+  poster_path
+)
 VALUES
 (
   1,
@@ -18,7 +28,9 @@ VALUES
   8.6,
   'A team of explorers travel through a wormhole in space to ensure humanity’s survival.',
   169,
-  'English'
+  'English',
+  '157336',
+  '/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg'
 ),
 (
   2,
@@ -27,7 +39,9 @@ VALUES
   8.8,
   'A skilled thief enters dreams to steal and manipulate secrets.',
   148,
-  'English'
+  'English',
+  '27205',
+  '/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg'
 );
 
 
