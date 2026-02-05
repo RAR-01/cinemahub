@@ -33,6 +33,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie createMovie(Movie movie) {
+        // tmdbId & posterPath will be saved automatically
         return movieRepository.save(movie);
     }
 
@@ -46,6 +47,10 @@ public class MovieServiceImpl implements MovieService {
         existing.setDescription(movie.getDescription());
         existing.setDuration(movie.getDuration());
         existing.setLanguage(movie.getLanguage());
+
+        // TMDB fields
+        existing.setTmdbId(movie.getTmdbId());
+        existing.setPosterPath(movie.getPosterPath());
 
         return movieRepository.save(existing);
     }

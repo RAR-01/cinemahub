@@ -24,6 +24,10 @@ public class Movie {
     private Integer duration;   // in minutes
     private String language;
 
+    // TMDB integration fields
+    private String tmdbId;
+    private String posterPath;
+
     @ManyToMany(mappedBy = "movies")
     @JsonIgnore
     private List<Theatre> theatres = new ArrayList<>();
@@ -31,13 +35,16 @@ public class Movie {
     public Movie() {}
 
     public Movie(String title, String genre, double rating,
-                 String description, Integer duration, String language) {
+                 String description, Integer duration, String language,
+                 String tmdbId, String posterPath) {
         this.title = title;
         this.genre = genre;
         this.rating = rating;
         this.description = description;
         this.duration = duration;
         this.language = language;
+        this.tmdbId = tmdbId;
+        this.posterPath = posterPath;
     }
 
     public long getId() {
@@ -94,5 +101,21 @@ public class Movie {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getTmdbId() {
+        return tmdbId;
+    }
+
+    public void setTmdbId(String tmdbId) {
+        this.tmdbId = tmdbId;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 }

@@ -29,7 +29,9 @@ public class MovieController {
                         movie.getRating(),
                         movie.getDescription(),
                         movie.getDuration(),
-                        movie.getLanguage()
+                        movie.getLanguage(),
+                        movie.getTmdbId(),
+                        movie.getPosterPath()
                 ))
                 .toList();
     }
@@ -44,7 +46,9 @@ public class MovieController {
                 movie.getRating(),
                 movie.getDescription(),
                 movie.getDuration(),
-                movie.getLanguage()
+                movie.getLanguage(),
+                movie.getTmdbId(),
+                movie.getPosterPath()
         );
     }
 
@@ -56,7 +60,9 @@ public class MovieController {
                 dto.getRating(),
                 dto.getDescription(),
                 dto.getDuration(),
-                dto.getLanguage()
+                dto.getLanguage(),
+                dto.getTmdbId(),
+                dto.getPosterPath()
         );
 
         Movie savedMovie = movieService.createMovie(movie);
@@ -68,7 +74,9 @@ public class MovieController {
                 savedMovie.getRating(),
                 savedMovie.getDescription(),
                 savedMovie.getDuration(),
-                savedMovie.getLanguage()
+                savedMovie.getLanguage(),
+                savedMovie.getTmdbId(),
+                savedMovie.getPosterPath()
         );
     }
 
@@ -83,7 +91,9 @@ public class MovieController {
                 dto.getRating(),
                 dto.getDescription(),
                 dto.getDuration(),
-                dto.getLanguage()
+                dto.getLanguage(),
+                dto.getTmdbId(),
+                dto.getPosterPath()
         );
 
         Movie updatedMovie = movieService.updateMovie(id, movie);
@@ -95,7 +105,9 @@ public class MovieController {
                 updatedMovie.getRating(),
                 updatedMovie.getDescription(),
                 updatedMovie.getDuration(),
-                updatedMovie.getLanguage()
+                updatedMovie.getLanguage(),
+                updatedMovie.getTmdbId(),
+                updatedMovie.getPosterPath()
         );
     }
 
