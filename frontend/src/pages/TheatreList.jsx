@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
-
 
 function TheatreList() {
     const { movieId } = useParams();
+    const navigate = useNavigate();
     const [theatres, setTheatres] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -25,7 +25,6 @@ function TheatreList() {
 
     return (
         <div>
-            <h1>TheatreList page loaded</h1>
             <h1>Select Theatre</h1>
 
             {theatres.length === 0 && <p>No theatres available</p>}
@@ -33,6 +32,11 @@ function TheatreList() {
             {theatres.map(theatre => (
                 <div
                     key={theatre.id}
+                    onClick={() =>
+                        navigate(
+                          `/movies/${movieId}/theatres/${theatre.id}/shows`
+                        )
+                    }
                     style={{
                         border: "1px solid #ccc",
                         padding: "10px",
@@ -43,7 +47,7 @@ function TheatreList() {
                     <h3>{theatre.name}</h3>
                     <p>{theatre.city}</p>
                 </div>
-            ))} 
+            ))}
         </div>
     );
 }
