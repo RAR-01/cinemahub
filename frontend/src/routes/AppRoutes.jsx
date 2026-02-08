@@ -12,6 +12,7 @@ const AppRoutes = () => {
             <Route path = "/movies/:movieId" element = {<MovieDetails />} />
             <Route path = "/movies/:movieId/theatres" element={<TheatreList />} />
             <Route path = "/movies/:movieId/theatres/:theatreId/shows" element={<ShowTimings />} />
+            <Route path="/screens/:screenId/seats" element={<SeatLayout />}/>
         </Routes>
     );
 };
