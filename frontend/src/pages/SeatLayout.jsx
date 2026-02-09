@@ -22,11 +22,17 @@ function SeatLayout() {
   };
 
   const lockSelectedSeats = () => {
-    lockSeats(selected).then(() => {
-      alert("Seats locked");
-    });
+    lockSeats(selected)
+      .then(() => {
+        alert("Seats locked successfully");
+      })
+      .catch(err => {
+        alert(
+          err.response?.data?.message ||
+          "Seat already booked or locked"
+        );
+      });
   };
-
   return (
     <div>
       <h2>Select Seats</h2>
@@ -48,8 +54,8 @@ function SeatLayout() {
                 seat.seatStatus === "BOOKED"
                   ? "#ccc"
                   : selected.includes(seat.id)
-                  ? "#ffa500"
-                  : "#90ee90"
+                    ? "#ffa500"
+                    : "#90ee90"
             }}
           >
             {seat.seatNumber}

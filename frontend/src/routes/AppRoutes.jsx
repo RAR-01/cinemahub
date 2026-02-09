@@ -4,6 +4,7 @@ import MovieDetails from "../pages/MovieDetails";
 import MovieList from "../pages/MovieList";
 import TheatreList from "../pages/TheatreList";
 import ShowTimings from "../pages/ShowTimings";
+import SeatLayout from "../pages/SeatLayout";
 const AppRoutes = () => {
     return (
         <Routes>
