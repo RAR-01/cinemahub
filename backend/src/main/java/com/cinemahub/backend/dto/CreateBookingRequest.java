@@ -13,7 +13,9 @@ public class CreateBookingRequest {
     private Long showId;
     @NotEmpty(message = "At least one seat must be selected")
     private List<Long> seatIds;
-
+    @NotNull(message = "User ID is required")
+    private Long userId;
+    
     public Long getShowId() {
         return showId;
     }
@@ -28,5 +30,13 @@ public class CreateBookingRequest {
 
     public void setSeatIds(List<Long> seatIds) {
         this.seatIds = seatIds;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

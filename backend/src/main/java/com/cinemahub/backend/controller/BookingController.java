@@ -1,14 +1,11 @@
 package com.cinemahub.backend.controller;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cinemahub.backend.dto.BookingResponse;
 import com.cinemahub.backend.dto.CreateBookingRequest;
@@ -20,63 +17,76 @@ import com.cinemahub.backend.service.BookingService;
 @RequestMapping("/bookings")
 public class BookingController {
 
-    @Autowired
-    private BookingService bookingService;
+    private final BookingService bookingService;
+
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     @PostMapping
-    public ResponseEntity<BookingResponse> createBooking(@RequestBody CreateBookingRequest request) {
+    public ResponseEntity<BookingResponse> createBooking(
+            @Valid @RequestBody CreateBookingRequest request) {
+
         Booking booking = bookingService.createBooking(
-            request.getShowId(),
-            request.getSeatIds());
+                request.getShowId(),
+                request.getSeatIds(),
+                request.getUserId()
+        );
+
         List<Long> seatIds = booking.getSeats()
-            .stream()
-            .map(seat -> seat.getId())
-            .toList();
+                .stream()
+                .map(Seat::getId)
+                .toList();
 
         BookingResponse response = new BookingResponse(
-            booking.getId(),
-            booking.getStatus(), 
-            seatIds,
-            booking.getTotalAmount()
+                booking.getId(),
+                booking.getStatus(),
+                seatIds,
+                booking.getTotalAmount()
         );
+
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{bookingId}/confirm")
-    public ResponseEntity<BookingResponse> confirmBooking(@PathVariable Long bookingId) {
+    public ResponseEntity<BookingResponse> confirmBooking(
+            @PathVariable Long bookingId) {
 
         Booking booking = bookingService.confirmBooking(bookingId);
 
         List<Long> seatIds = booking.getSeats()
-                    .stream()
-                    .map(seat -> seat.getId())
-                    .toList();
+                .stream()
+                .map(Seat::getId)
+                .toList();
 
         BookingResponse response = new BookingResponse(
-            booking.getId(),
-            booking.getStatus(),
-            seatIds,
-            booking.getTotalAmount()
+                booking.getId(),
+                booking.getStatus(),
+                seatIds,
+                booking.getTotalAmount()
         );
+
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingResponse> getBooking(
-        @PathVariable Long bookingId) {
-            Booking booking = bookingService.getBookingById(bookingId);
+            @PathVariable Long bookingId) {
 
-            List<Long> seatIds = booking.getSeats()
-                    .stream()
-                    .map(Seat::getId)
-                    .toList();
-            BookingResponse response = new BookingResponse(booking.getId(), 
-                booking.getStatus(), 
-                seatIds, 
+        Booking booking = bookingService.getBookingById(bookingId);
+
+        List<Long> seatIds = booking.getSeats()
+                .stream()
+                .map(Seat::getId)
+                .toList();
+
+        BookingResponse response = new BookingResponse(
+                booking.getId(),
+                booking.getStatus(),
+                seatIds,
                 booking.getTotalAmount()
-            );
+        );
 
-            return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response);
     }
-
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import com.cinemahub.backend.model.Booking;
 
 public interface BookingService {
-    Booking createBooking(Long showId, List<Long> seatIds);
+    Booking createBooking(Long showId, List<Long> seatIds, Long userId);
 
     Booking confirmBooking(Long bookingId);
 

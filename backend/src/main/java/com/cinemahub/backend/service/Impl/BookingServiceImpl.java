@@ -11,9 +11,11 @@ import com.cinemahub.backend.exception.ResourceNotFoundException;
 import com.cinemahub.backend.model.Booking;
 import com.cinemahub.backend.model.Seat;
 import com.cinemahub.backend.model.Show;
+import com.cinemahub.backend.model.User;
 import com.cinemahub.backend.repository.BookingRepository;
 import com.cinemahub.backend.repository.SeatRepository;
 import com.cinemahub.backend.repository.ShowRepository;
+import com.cinemahub.backend.repository.UserRepository;
 import com.cinemahub.backend.service.BookingService;
 import com.cinemahub.backend.service.SeatLockService;
 import com.cinemahub.backend.service.SeatService;
@@ -32,25 +34,37 @@ public class BookingServiceImpl implements BookingService {
     private final SeatRepository seatRepository;
     private final SeatLockService seatLockService;
     private final SeatService seatService;
+    private final UserRepository userRepository;
 
     public BookingServiceImpl(
             BookingRepository bookingRepository,
             ShowRepository showRepository,
             SeatRepository seatRepository,
             SeatLockService seatLockService,
-            SeatService seatService
+            SeatService seatService,
+            UserRepository userRepository
     ) {
         this.bookingRepository = bookingRepository;
         this.showRepository = showRepository;
         this.seatRepository = seatRepository;
         this.seatLockService = seatLockService;
         this.seatService = seatService;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public Booking createBooking(@NotNull Long showId, @NotNull List<Long> seatIds) {
+    public Booking createBooking(
+            @NotNull Long showId,
+            @NotNull List<Long> seatIds,
+            @NotNull Long userId
+    ) {
 
         expirePendingBookings();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found")
+                );
 
         Show show = showRepository.findById(showId)
                 .orElseThrow(() ->
@@ -69,23 +83,23 @@ public class BookingServiceImpl implements BookingService {
         seatLockService.lockSeats(seatIds);
 
         Booking booking = new Booking();
+        booking.setUser(user);
         booking.setShow(show);
         booking.setSeats(seats);
         booking.setStatus(BookingStatus.PENDING_PAYMENT);
         booking.setLockedAt(LocalDateTime.now());
         booking.setExpiresAt(LocalDateTime.now().plusMinutes(10));
-        booking.setCreatedAt(LocalDateTime.now());
-        
+
         double totalAmount = seats.stream()
                 .mapToDouble(Seat::getPrice)
                 .sum();
-        
+
         if (totalAmount <= 0) {
             throw new ConflictException("Invalid booking amount");
         }
 
         booking.setTotalAmount(totalAmount);
-        
+
         return bookingRepository.save(booking);
     }
 
