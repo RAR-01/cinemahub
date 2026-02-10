@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { getSeatsByScreen, lockSeats } from "../api/seatApi";
+import { createBooking } from "../api/bookingApi";
 
 function SeatLayout() {
   const { screenId } = useParams();
+  const { state } = useLocation(); // showId comes from ShowTimings
+  const navigate = useNavigate();
+
+  const showId = state?.showId;
+
   const [seats, setSeats] = useState([]);
   const [selected, setSelected] = useState([]);
 
@@ -21,18 +27,24 @@ function SeatLayout() {
     );
   };
 
-  const lockSelectedSeats = () => {
-    lockSeats(selected)
-      .then(() => {
-        alert("Seats locked successfully");
-      })
-      .catch(err => {
-        alert(
-          err.response?.data?.message ||
-          "Seat already booked or locked"
-        );
+  const lockAndCreateBooking = async () => {
+    try {
+      await lockSeats(selected);
+
+      const res = await createBooking(showId, selected);
+
+      navigate(`/booking/${res.data.bookingId}`, {
+        state: res.data
       });
+
+    } catch (err) {
+      alert(
+        err.response?.data?.message ||
+        "Seat already booked or lock expired"
+      );
+    }
   };
+
   return (
     <div>
       <h2>Select Seats</h2>
@@ -64,8 +76,8 @@ function SeatLayout() {
       </div>
 
       {selected.length > 0 && (
-        <button onClick={lockSelectedSeats}>
-          Lock Seats
+        <button onClick={lockAndCreateBooking}>
+          Proceed to Booking
         </button>
       )}
     </div>
