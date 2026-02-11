@@ -129,7 +129,9 @@ VALUES
 -- ================================
 INSERT INTO users (id, name, email, password, created_at)
 VALUES
-(1, 'Rishi Rai', 'rishi@gmail.com', 'password123', NOW());
+(1, 'Rishi Rai', 'rishi@gmail.com',
+'$2a$10$Dow1X0X8cYpXwS1Xx2YQ7e8x8lOe7kQ6VJ5sG9Lw2fXJ7YkN8uF2K',
+NOW());
 
 -- ================================
 -- BOOKINGS
