@@ -9,6 +9,7 @@ import TheatreList from "../pages/TheatreList";
 import ShowTimings from "../pages/ShowTimings";
 import SeatLayout from "../pages/SeatLayout";
 import BookingSummary from "../pages/BookingSummary";
+import MyBookings from "../pages/MyBookings";
 
 const AppRoutes = () => {
     return (
@@ -26,6 +27,7 @@ const AppRoutes = () => {
             <Route path="/movies/:movieId/theatres/:theatreId/shows" element={<ShowTimings />} />
             <Route path="/screens/:screenId/seats" element={<SeatLayout />} />
             <Route path="/booking/:bookingId" element={<BookingSummary />} />
+            <Route path="/my-bookings" element={<MyBookings />} />
 
         </Routes>
     );

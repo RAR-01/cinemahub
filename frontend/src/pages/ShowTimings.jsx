@@ -1,4 +1,3 @@
-// 
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getShowsByMovie } from "../api/showApi";
@@ -19,22 +18,31 @@ function ShowTimings() {
   }, [movieId, theatreId]);
 
   return (
-    <div>
-      <h2>Show Timings</h2>
+    <div className="container mt-5">
+      <h2 className="text-center mb-4">Show Timings</h2>
 
-      {shows.map(show => (
-        <button
-          key={show.id}
-          onClick={() =>
-            navigate(`/screens/${show.screenId}/seats`)
-          }
-        >
-          {new Date(show.startTime).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </button>
-      ))}
+      {shows.length === 0 ? (
+        <div className="alert alert-warning text-center">
+          No shows available
+        </div>
+      ) : (
+        <div className="d-flex flex-wrap justify-content-center gap-3">
+          {shows.map(show => (
+            <button
+              key={show.id}
+              className="btn btn-outline-primary px-4 py-2"
+              onClick={() =>
+                navigate(`/screens/${show.screenId}/seats`)
+              }
+            >
+              {new Date(show.startTime).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

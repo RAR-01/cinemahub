@@ -5,7 +5,7 @@ import { createBooking } from "../api/bookingApi";
 
 function SeatLayout() {
   const { screenId } = useParams();
-  const { state } = useLocation(); // showId comes from ShowTimings
+  const { state } = useLocation();
   const navigate = useNavigate();
 
   const showId = state?.showId;
@@ -29,11 +29,17 @@ function SeatLayout() {
 
   const lockAndCreateBooking = async () => {
     try {
+      if (selected.length === 0) {
+        alert("Please select at least one seat");
+        return;
+      }
+
       await lockSeats(selected);
 
       const res = await createBooking(showId, selected);
 
-      navigate(`/booking/${res.data.bookingId}`, {
+
+      navigate("/booking-summary", {
         state: res.data
       });
 
@@ -46,39 +52,60 @@ function SeatLayout() {
   };
 
   return (
-    <div>
-      <h2>Select Seats</h2>
+    <div className="container mt-5">
+      <h2 className="text-center mb-4">Select Seats</h2>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(8, 1fr)",
-        gap: "8px"
-      }}>
-        {seats.map(seat => (
+      {/* Seat Grid */}
+      <div className="row justify-content-center">
+        <div className="col-md-8">
           <div
-            key={seat.id}
-            onClick={() => toggleSeat(seat)}
-            style={{
-              padding: "10px",
-              textAlign: "center",
-              cursor: seat.seatStatus === "AVAILABLE" ? "pointer" : "not-allowed",
-              background:
-                seat.seatStatus === "BOOKED"
-                  ? "#ccc"
-                  : selected.includes(seat.id)
-                    ? "#ffa500"
-                    : "#90ee90"
-            }}
+            className="d-grid gap-2"
+            style={{ gridTemplateColumns: "repeat(8, 1fr)" }}
           >
-            {seat.seatNumber}
+            {seats.map(seat => {
+
+              let btnClass = "btn ";
+
+              if (seat.seatStatus === "BOOKED") {
+                btnClass += "btn-secondary";
+              } else if (selected.includes(seat.id)) {
+                btnClass += "btn-warning";
+              } else {
+                btnClass += "btn-success";
+              }
+
+              return (
+                <button
+                  key={seat.id}
+                  disabled={seat.seatStatus !== "AVAILABLE"}
+                  onClick={() => toggleSeat(seat)}
+                  className={btnClass}
+                >
+                  {seat.seatNumber}
+                </button>
+              );
+            })}
           </div>
-        ))}
+        </div>
       </div>
 
+      {/* Legend */}
+      <div className="mt-4 text-center">
+        <span className="badge bg-success me-2">Available</span>
+        <span className="badge bg-warning text-dark me-2">Selected</span>
+        <span className="badge bg-secondary">Booked</span>
+      </div>
+
+      {/* Proceed Button */}
       {selected.length > 0 && (
-        <button onClick={lockAndCreateBooking}>
-          Proceed to Booking
-        </button>
+        <div className="text-center mt-4">
+          <button
+            className="btn btn-primary px-4"
+            onClick={lockAndCreateBooking}
+          >
+            Proceed to Booking
+          </button>
+        </div>
       )}
     </div>
   );

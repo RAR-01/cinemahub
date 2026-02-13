@@ -21,33 +21,42 @@ function TheatreList() {
             });
     }, [movieId]);
 
-    if (loading) return <p>Loading Theatres...</p>;
+    if (loading) {
+        return (
+            <div className="container mt-5 text-center">
+                <div className="spinner-border text-primary"></div>
+                <p className="mt-3">Loading Theatres...</p>
+            </div>
+        );
+    }
 
     return (
-        <div>
-            <h1>Select Theatre</h1>
+        <div className="container mt-5">
+            <h2 className="mb-4 text-center">Select Theatre</h2>
 
-            {theatres.length === 0 && <p>No theatres available</p>}
-
-            {theatres.map(theatre => (
-                <div
-                    key={theatre.id}
-                    onClick={() =>
-                        navigate(
-                          `/movies/${movieId}/theatres/${theatre.id}/shows`
-                        )
-                    }
-                    style={{
-                        border: "1px solid #ccc",
-                        padding: "10px",
-                        marginBottom: "10px",
-                        cursor: "pointer"
-                    }}
-                >
-                    <h3>{theatre.name}</h3>
-                    <p>{theatre.city}</p>
+            {theatres.length === 0 && (
+                <div className="alert alert-warning text-center">
+                    No theatres available
                 </div>
-            ))}
+            )}
+
+            <div className="list-group">
+                {theatres.map(theatre => (
+                    <div
+                        key={theatre.id}
+                        className="list-group-item list-group-item-action shadow-sm mb-2 rounded"
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                            navigate(
+                                `/movies/${movieId}/theatres/${theatre.id}/shows`
+                            )
+                        }
+                    >
+                        <h5 className="mb-1">{theatre.name}</h5>
+                        <p className="mb-0 text-muted">{theatre.city}</p>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

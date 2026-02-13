@@ -25,27 +25,50 @@ const Login = () => {
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit = {handleSubmit}>
-                <input 
-                    type="text"
-                    placeholder="Email"
-                    value = {email}
-                    onChange = {(e) => setEmail(e.target.value)}
-                    required
-                 />
-                 <br /><br />
-                 <input 
-                    type="password"
-                    placeholder="Password"
-                    value = {password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                 />
-                 <br /><br />
-                 <button type = "submit">Login</button>
-            </form>
+        <div className="container d-flex justify-content-center align-items-center vh-100">
+            <div className="card p-4 shadow" style={{ width: "400px" }}>
+                <h3 className="text-center mb-4">Login</h3>
+
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                        <label className="form-label">Email</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label">Password</label>
+                        <input
+                            type="password"
+                            className="form-control"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="btn btn-primary w-100">
+                        Login
+                    </button>
+                </form>
+
+                <hr />
+
+                <div className="text-center">
+                    <p className="mb-2">Don't have an account?</p>
+                    <button
+                        className="btn btn-outline-secondary w-100"
+                        onClick={() => navigate("/register")}
+                    >
+                        Register
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

@@ -18,26 +18,48 @@ function MovieDetails() {
   }, [movieId]);
 
   if (!movie) {
-    return <h2>Loading...</h2>;
+    return (
+      <div className="container mt-5 text-center">
+        <div className="spinner-border text-primary"></div>
+        <p className="mt-3">Loading...</p>
+      </div>
+    );
   }
 
   const posterUrl = movie.posterPath
     ? `${TMDB_IMAGE_BASE}${movie.posterPath}`
     : FALLBACK_POSTER;
 
-  return(
-    <div>
-      <h1>{movie.title}</h1>
-      <p><strong>Genre:</strong> {movie.genre}</p>
-      <p><strong>Rating:</strong> ⭐ {movie.rating}</p>
-      <p><strong>Language:</strong> {movie.langguage}</p>
-      <p><strong>Duration:</strong> {movie.duration} mins</p>
-      <p><strong>Description:</strong> {movie.description}</p>
+  return (
+    <div className="container mt-5">
+      <div className="row">
+        
+        <div className="col-md-4 text-center">
+          <img
+            src={posterUrl}
+            alt={movie.title}
+            className="img-fluid rounded shadow"
+          />
+        </div>
 
-      <button 
-        onClick={() => navigate(`/movies/${movieId}/theatres`)}>
-          Book Tickets
-        </button>
+        <div className="col-md-8">
+          <h2 className="mb-3">{movie.title}</h2>
+
+          <p><strong>Genre:</strong> {movie.genre}</p>
+          <p><strong>Rating:</strong> ⭐ {movie.rating}</p>
+          <p><strong>Language:</strong> {movie.language}</p>
+          <p><strong>Duration:</strong> {movie.duration} mins</p>
+          <p className="mt-3">{movie.description}</p>
+
+          <button
+            className="btn btn-primary mt-4"
+            onClick={() => navigate(`/movies/${movieId}/theatres`)}
+          >
+            Book Tickets
+          </button>
+        </div>
+
+      </div>
     </div>
   );
 }

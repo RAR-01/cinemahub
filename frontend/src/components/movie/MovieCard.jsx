@@ -13,28 +13,28 @@ const MovieCard = ({ movie }) => {
 
     return (
         <div
+            className="card h-100 shadow-sm"
+            style={{ cursor: "pointer" }}
             onClick={() => navigate(`/movies/${movie.id}`)}
-            style={{
-                border: "1px solid #1c718b",
-                padding: "10px",
-                width: "200px",
-                cursor: "pointer"
-            }}
         >
             <img
                 src={posterUrl}
+                className="card-img-top"
                 alt={movie.title}
-                style={{
-                    width: "100%",
-                    height: "300px",
-                    objectFit: "cover",
-                    marginBottom: "8px"
-                }}
+                style={{ height: "300px", objectFit: "cover" }}
             />
 
-            <h3>{movie.title}</h3>
-            <p><b>Genre:</b> {movie.genre}</p>
-            <p><b>Rating:</b> ⭐ {movie.rating}</p>
+            <div className="card-body">
+                <h5 className="card-title">{movie.title}</h5>
+
+                <p className="card-text mb-1">
+                    <strong>Genre:</strong> {movie.genre}
+                </p>
+
+                <p className="card-text">
+                    <strong>Rating:</strong> ⭐ {movie.rating}
+                </p>
+            </div>
         </div>
     );
 };
