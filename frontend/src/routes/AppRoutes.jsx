@@ -15,13 +15,14 @@ const AppRoutes = () => {
     return (
         <Routes>
 
-            {/* Default route → Login */}
-            <Route path="/" element={<Login />} />
+            {/* Public routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-            {/* App routes (after login) */}
-            <Route path="/movies" element={<MovieList />} />
+            {/* Home page after login */}
+            <Route path="/" element={<MovieList />} />
+
+            {/* App routes */}
             <Route path="/movies/:movieId" element={<MovieDetails />} />
             <Route path="/movies/:movieId/theatres" element={<TheatreList />} />
             <Route path="/movies/:movieId/theatres/:theatreId/shows" element={<ShowTimings />} />

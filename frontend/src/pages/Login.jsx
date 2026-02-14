@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../api/authApi";
 
@@ -6,6 +6,13 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+
+    // ✅ If already logged in → redirect to home
+    useEffect(() => {
+        if (localStorage.getItem("userId")) {
+            navigate("/");
+        }
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,7 +24,10 @@ const Login = () => {
             localStorage.setItem("email", response.data.email);
 
             alert("Login successful!");
+
+            // ✅ Redirect to MovieList (home)
             navigate("/");
+
         } catch (error) {
             alert("Invalid credentials");
             console.error(error);
