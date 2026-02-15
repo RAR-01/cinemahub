@@ -1,15 +1,16 @@
 -- ================================
 -- THEATRES
 -- ================================
-INSERT INTO theatres (name, city)
+INSERT IGNORE INTO theatres (name, city)
 VALUES
 ('PVR Phoenix Mall', 'Bangalore'),
 ('INOX Central', 'Bangalore');
 
+
 -- ================================
 -- MOVIES
 -- ================================
-INSERT INTO movies
+INSERT IGNORE INTO movies
 (title, genre, rating, description, duration, language, tmdb_id, poster_path)
 VALUES
 (
@@ -33,40 +34,44 @@ VALUES
   '/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg'
 );
 
+
 -- ================================
--- THEATRE_MOVIES (Many-to-Many)
+-- THEATRE_MOVIES
 -- ================================
-INSERT INTO theatre_movies (theatre_id, movie_id)
+INSERT IGNORE INTO theatre_movies (theatre_id, movie_id)
 VALUES
 (1,1),
 (1,2),
 (2,1),
 (2,2);
 
+
 -- ================================
 -- SCREENS
 -- ================================
-INSERT INTO screens (name, theatre_id)
+INSERT IGNORE INTO screens (name, theatre_id)
 VALUES
 ('Screen 1',1),
 ('Screen 2',1),
 ('Screen 1',2),
 ('Screen 2',2);
 
+
 -- ================================
 -- SHOWS
 -- ================================
-INSERT INTO shows (movie_id, theatre_id, screen_id, start_time, end_time)
+INSERT IGNORE INTO shows (movie_id, theatre_id, screen_id, start_time, end_time)
 VALUES
 (1,1,1,'2026-02-12 18:30:00','2026-02-12 21:20:00'),
 (2,1,2,'2026-02-12 22:00:00','2026-02-13 00:30:00'),
 (1,2,3,'2026-02-12 19:00:00','2026-02-12 21:50:00'),
 (2,2,4,'2026-02-12 21:30:00','2026-02-13 00:00:00');
 
+
 -- ================================
 -- SEATS (Screen 1 - Theatre 1)
 -- ================================
-INSERT INTO seats
+INSERT IGNORE INTO seats
 (seat_number, row_label, column_number, seat_type, seat_status, screen_id, price)
 VALUES
 ('A1','A',1,'REGULAR','AVAILABLE',1,150),
@@ -75,10 +80,11 @@ VALUES
 ('A4','A',4,'PREMIUM','AVAILABLE',1,250),
 ('A5','A',5,'RECLINER','AVAILABLE',1,400);
 
+
 -- ================================
 -- SEATS (Screen 2 - Theatre 1)
 -- ================================
-INSERT INTO seats
+INSERT IGNORE INTO seats
 (seat_number, row_label, column_number, seat_type, seat_status, screen_id, price)
 VALUES
 ('B1','B',1,'REGULAR','AVAILABLE',2,150),
@@ -87,10 +93,11 @@ VALUES
 ('B4','B',4,'PREMIUM','AVAILABLE',2,250),
 ('B5','B',5,'RECLINER','AVAILABLE',2,400);
 
+
 -- ================================
 -- SEATS (Screen 1 - Theatre 2)
 -- ================================
-INSERT INTO seats
+INSERT IGNORE INTO seats
 (seat_number, row_label, column_number, seat_type, seat_status, screen_id, price)
 VALUES
 ('C1','C',1,'REGULAR','AVAILABLE',3,150),
@@ -99,10 +106,11 @@ VALUES
 ('C4','C',4,'PREMIUM','AVAILABLE',3,250),
 ('C5','C',5,'RECLINER','AVAILABLE',3,400);
 
+
 -- ================================
 -- SEATS (Screen 2 - Theatre 2)
 -- ================================
-INSERT INTO seats
+INSERT IGNORE INTO seats
 (seat_number, row_label, column_number, seat_type, seat_status, screen_id, price)
 VALUES
 ('D1','D',1,'REGULAR','AVAILABLE',4,150),

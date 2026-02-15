@@ -4,7 +4,12 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name ="shows")
+@Table(
+    name = "shows",
+    uniqueConstraints = @UniqueConstraint(
+        columnNames = {"movie_id", "theatre_id", "screen_id", "start_time"}
+    )
+)
 public class Show {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

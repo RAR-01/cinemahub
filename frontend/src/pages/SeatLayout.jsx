@@ -36,8 +36,14 @@ function SeatLayout() {
 
       await lockSeats(selected);
 
-      const res = await createBooking(showId, selected);
+      // ✅ Refresh seat layout from backend
+      const updatedSeats = await getSeatsByScreen(screenId);
+      setSeats(updatedSeats.data);
 
+      // ✅ Clear selected seats
+      setSelected([]);
+
+      const res = await createBooking(showId, selected);
 
       navigate("/booking-summary", {
         state: res.data
@@ -50,6 +56,7 @@ function SeatLayout() {
       );
     }
   };
+
 
   return (
     <div className="container mt-5">

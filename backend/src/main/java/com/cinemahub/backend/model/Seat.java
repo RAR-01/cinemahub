@@ -9,7 +9,12 @@ import jakarta.persistence.*;
 
 
 @Entity
-@Table(name = "seats")
+@Table(
+    name = "seats",
+    uniqueConstraints = @UniqueConstraint(
+        columnNames = {"screen_id", "seatNumber"}
+    )
+)
 public class Seat {
 
     @Id
