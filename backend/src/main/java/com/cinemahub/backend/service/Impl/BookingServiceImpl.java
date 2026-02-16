@@ -17,7 +17,6 @@ import com.cinemahub.backend.repository.SeatRepository;
 import com.cinemahub.backend.repository.ShowRepository;
 import com.cinemahub.backend.repository.UserRepository;
 import com.cinemahub.backend.service.BookingService;
-import com.cinemahub.backend.service.SeatLockService;
 import com.cinemahub.backend.service.SeatService;
 import com.cinemahub.enums.BookingStatus;
 import com.cinemahub.enums.SeatStatus;
@@ -32,7 +31,6 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final ShowRepository showRepository;
     private final SeatRepository seatRepository;
-    private final SeatLockService seatLockService;
     private final SeatService seatService;
     private final UserRepository userRepository;
 
@@ -40,14 +38,12 @@ public class BookingServiceImpl implements BookingService {
             BookingRepository bookingRepository,
             ShowRepository showRepository,
             SeatRepository seatRepository,
-            SeatLockService seatLockService,
             SeatService seatService,
             UserRepository userRepository
     ) {
         this.bookingRepository = bookingRepository;
         this.showRepository = showRepository;
         this.seatRepository = seatRepository;
-        this.seatLockService = seatLockService;
         this.seatService = seatService;
         this.userRepository = userRepository;
     }
@@ -58,8 +54,6 @@ public class BookingServiceImpl implements BookingService {
             @NotNull List<Long> seatIds,
             @NotNull Long userId
     ) {
-
-        expirePendingBookings();
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
@@ -80,15 +74,32 @@ public class BookingServiceImpl implements BookingService {
             throw new ResourceNotFoundException("One or more seats not found");
         }
 
-        seatLockService.lockSeats(seatIds);
+        LocalDateTime now = LocalDateTime.now();
+
+        for (Seat seat : seats) {
+
+            if (seat.getSeatStatus() != SeatStatus.LOCKED) {
+                throw new ConflictException("Seat already booked or lock expired");
+            }
+
+            if (seat.getLockExpiresAt() == null ||
+                seat.getLockExpiresAt().isBefore(now)) {
+
+                seat.setSeatStatus(SeatStatus.AVAILABLE);
+                seat.setLockedAt(null);
+                seat.setLockExpiresAt(null);
+
+                throw new ConflictException("Seat lock expired");
+            }
+        }
 
         Booking booking = new Booking();
         booking.setUser(user);
         booking.setShow(show);
         booking.setSeats(seats);
         booking.setStatus(BookingStatus.PENDING_PAYMENT);
-        booking.setLockedAt(LocalDateTime.now());
-        booking.setExpiresAt(LocalDateTime.now().plusMinutes(10));
+        booking.setLockedAt(now);
+        booking.setExpiresAt(now.plusMinutes(10));
 
         double totalAmount = seats.stream()
                 .mapToDouble(Seat::getPrice)
@@ -106,8 +117,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking confirmBooking(Long bookingId) {
 
-        expirePendingBookings();
-
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Booking not found")
@@ -121,8 +130,14 @@ public class BookingServiceImpl implements BookingService {
             throw new ConflictException("Booking is not eligible for payment");
         }
 
+        LocalDateTime now = LocalDateTime.now();
+
         for (Seat seat : booking.getSeats()) {
-            if (seat.getSeatStatus() != SeatStatus.LOCKED) {
+
+            if (seat.getSeatStatus() != SeatStatus.LOCKED ||
+                seat.getLockExpiresAt() == null ||
+                seat.getLockExpiresAt().isBefore(now)) {
+
                 throw new ConflictException("Seat lock lost");
             }
         }
@@ -131,6 +146,8 @@ public class BookingServiceImpl implements BookingService {
 
         for (Seat seat : booking.getSeats()) {
             seat.setSeatStatus(SeatStatus.BOOKED);
+            seat.setLockedAt(null);
+            seat.setLockExpiresAt(null);
         }
 
         return bookingRepository.save(booking);

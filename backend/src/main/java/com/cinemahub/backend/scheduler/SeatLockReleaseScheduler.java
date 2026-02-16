@@ -23,14 +23,17 @@ public class SeatLockReleaseScheduler {
     @Transactional
     public void releaseExpiredSeatLocks() {
 
+        LocalDateTime now = LocalDateTime.now().withNano(0);
+
         int releasedSeats = seatRepository.releaseExpiredLocks(
             SeatStatus.LOCKED,
             SeatStatus.AVAILABLE,
-            LocalDateTime.now()
+            now
         );
-        
+
         if (releasedSeats > 0) {
             System.out.println("Released " + releasedSeats + " expired seat locks");
         }
     }
+
 }

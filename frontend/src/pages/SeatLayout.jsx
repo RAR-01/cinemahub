@@ -5,17 +5,23 @@ import { createBooking } from "../api/bookingApi";
 
 function SeatLayout() {
   const { screenId } = useParams();
-  const { state } = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const showId = state?.showId;
+  const showId = location.state?.showId;
 
   const [seats, setSeats] = useState([]);
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
+    if (!showId) {
+      alert("Invalid show selection. Please select show again.");
+      navigate(-1);
+      return;
+    }
+
     getSeatsByScreen(screenId).then(res => setSeats(res.data));
-  }, [screenId]);
+  }, [screenId, showId, navigate]);
 
   const toggleSeat = (seat) => {
     if (seat.seatStatus !== "AVAILABLE") return;
@@ -34,18 +40,16 @@ function SeatLayout() {
         return;
       }
 
+      if (!showId) {
+        alert("Show ID missing.");
+        return;
+      }
+
       await lockSeats(selected);
-
-      // ✅ Refresh seat layout from backend
-      const updatedSeats = await getSeatsByScreen(screenId);
-      setSeats(updatedSeats.data);
-
-      // ✅ Clear selected seats
-      setSelected([]);
 
       const res = await createBooking(showId, selected);
 
-      navigate("/booking-summary", {
+      navigate(`/booking/${res.data.id}`, {
         state: res.data
       });
 
@@ -57,12 +61,10 @@ function SeatLayout() {
     }
   };
 
-
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Select Seats</h2>
 
-      {/* Seat Grid */}
       <div className="row justify-content-center">
         <div className="col-md-8">
           <div
@@ -96,14 +98,12 @@ function SeatLayout() {
         </div>
       </div>
 
-      {/* Legend */}
       <div className="mt-4 text-center">
         <span className="badge bg-success me-2">Available</span>
         <span className="badge bg-warning text-dark me-2">Selected</span>
         <span className="badge bg-secondary">Booked</span>
       </div>
 
-      {/* Proceed Button */}
       {selected.length > 0 && (
         <div className="text-center mt-4">
           <button

@@ -46,28 +46,27 @@ public class PaymentServiceImpl implements PaymentService {
             throw new ConflictException("Booking not eligible for payment");
         }
 
-        if (paymentRepository.existsByBookingIdAndStatus(
-                bookingId, PaymentStatus.SUCCESS)) {
-            throw new ConflictException("Payment already completed");
-        }
+        return paymentRepository.findByBookingId(bookingId)
+                .orElseGet(() -> {
 
-        Payment payment = new Payment();
-        payment.setBooking(booking);
+                    Payment payment = new Payment();
+                    payment.setBooking(booking);
 
-        Double amount = booking.getTotalAmount();
-        if (amount == null) {
-            throw new ConflictException("Booking total amount is not set");
-        }
-        payment.setAmount(amount);
+                    Double amount = booking.getTotalAmount();
+                    if (amount == null) {
+                        throw new ConflictException("Booking total amount is not set");
+                    }
 
-        payment.setStatus(PaymentStatus.INITIATED);
+                    payment.setAmount(amount);
+                    payment.setStatus(PaymentStatus.INITIATED);
 
-        LocalDateTime now = LocalDateTime.now();
-        payment.setCreatedAt(now);
-        payment.setUpdatedAt(now);
-        payment.setExpiresAt(now.plusMinutes(5)); // payment window
+                    LocalDateTime now = LocalDateTime.now();
+                    payment.setCreatedAt(now);
+                    payment.setUpdatedAt(now);
+                    payment.setExpiresAt(now.plusMinutes(5));
 
-        return paymentRepository.save(payment);
+                    return paymentRepository.save(payment);
+                });
     }
 
     @Override
@@ -78,12 +77,19 @@ public class PaymentServiceImpl implements PaymentService {
                         new ResourceNotFoundException("Payment not found")
                 );
 
-        if (payment.getStatus() != PaymentStatus.INITIATED) {
-            throw new ConflictException("Invalid payment state");
+        // If already success → just return (NO ERROR)
+        if (payment.getStatus() == PaymentStatus.SUCCESS) {
+            return;
+        }
+
+        //  If already failed → cannot succeed
+        if (payment.getStatus() == PaymentStatus.FAILED) {
+            throw new ConflictException("Payment already failed");
         }
 
         if (payment.getExpiresAt() != null &&
                 payment.getExpiresAt().isBefore(LocalDateTime.now())) {
+
             handlePaymentFailure(paymentId);
             return;
         }
@@ -115,8 +121,14 @@ public class PaymentServiceImpl implements PaymentService {
                         new ResourceNotFoundException("Payment not found")
                 );
 
-        if (payment.getStatus() != PaymentStatus.INITIATED) {
-            throw new ConflictException("Invalid payment state");
+        // ✅ If already failed → do nothing
+        if (payment.getStatus() == PaymentStatus.FAILED) {
+            return;
+        }
+
+        // ❌ If already success → cannot fail
+        if (payment.getStatus() == PaymentStatus.SUCCESS) {
+            throw new ConflictException("Payment already completed");
         }
 
         Booking booking = payment.getBooking();

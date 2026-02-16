@@ -9,29 +9,42 @@ import TheatreList from "../pages/TheatreList";
 import ShowTimings from "../pages/ShowTimings";
 import SeatLayout from "../pages/SeatLayout";
 import BookingSummary from "../pages/BookingSummary";
+import PaymentPage from "../pages/PaymentPage";
 import MyBookings from "../pages/MyBookings";
 
 const AppRoutes = () => {
-    return (
-        <Routes>
+  return (
+    <Routes>
 
-            {/* Public routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+      {/* Public routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
-            {/* Home page after login */}
-            <Route path="/" element={<MovieList />} />
+      {/* Home after login */}
+      <Route path="/" element={<MovieList />} />
 
-            {/* App routes */}
-            <Route path="/movies/:movieId" element={<MovieDetails />} />
-            <Route path="/movies/:movieId/theatres" element={<TheatreList />} />
-            <Route path="/movies/:movieId/theatres/:theatreId/shows" element={<ShowTimings />} />
-            <Route path="/screens/:screenId/seats" element={<SeatLayout />} />
-            <Route path="/booking/:bookingId" element={<BookingSummary />} />
-            <Route path="/my-bookings" element={<MyBookings />} />
+      {/* Movie flow */}
+      <Route path="/movies/:movieId" element={<MovieDetails />} />
+      <Route path="/movies/:movieId/theatres" element={<TheatreList />} />
+      <Route
+        path="/movies/:movieId/theatres/:theatreId/shows"
+        element={<ShowTimings />}
+      />
 
-        </Routes>
-    );
+      {/* Seat selection */}
+      <Route path="/screens/:screenId/seats" element={<SeatLayout />} />
+
+      {/* Booking summary */}
+      <Route path="/booking/:bookingId" element={<BookingSummary />} />
+
+      {/* Payment page */}
+      <Route path="/payment/:bookingId" element={<PaymentPage />} />
+
+      {/* My bookings */}
+      <Route path="/my-bookings" element={<MyBookings />} />
+
+    </Routes>
+  );
 };
 
 export default AppRoutes;

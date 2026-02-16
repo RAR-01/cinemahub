@@ -9,10 +9,12 @@ function PaymentPage() {
   const [payment, setPayment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes = 300 sec
+  const [timeLeft, setTimeLeft] = useState(300);
 
   // Initiate payment
   useEffect(() => {
+    if (!bookingId) return;
+
     axios.post(`/payments/initiate/${bookingId}`)
       .then(res => {
         setPayment(res.data);
@@ -25,7 +27,7 @@ function PaymentPage() {
       });
   }, [bookingId, navigate]);
 
-  // Countdown timer
+  // Countdown
   useEffect(() => {
     if (!payment) return;
 
@@ -52,9 +54,14 @@ function PaymentPage() {
   const handleSuccess = async () => {
     try {
       setProcessing(true);
+
       await axios.post(`/payments/${payment.paymentId}/success`);
-      navigate(`/booking-confirmation/${bookingId}`);
+
+      alert("Payment successful!");
+
+      navigate(`/booking/${bookingId}`);
     } catch (err) {
+      console.error(err);
       alert("Payment failed");
       setProcessing(false);
     }
@@ -63,6 +70,7 @@ function PaymentPage() {
   const handleFailure = async () => {
     try {
       await axios.post(`/payments/${payment.paymentId}/failure`);
+      alert("Payment failed");
       navigate("/");
     } catch (err) {
       console.error(err);

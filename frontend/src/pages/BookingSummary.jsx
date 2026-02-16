@@ -1,77 +1,78 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "../api/axios";
 
 function BookingSummary() {
-  const { state } = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
+  const { bookingId } = useParams();
 
-  if (!state) {
-    return (
-      <div className="container mt-5 text-center">
-        <div className="alert alert-danger">
-          Invalid booking details.
-        </div>
-      </div>
-    );
-  }
+  const [booking, setBooking] = useState(location.state || null);
+
+  // If page refreshed → fetch booking from backend
+  useEffect(() => {
+    if (!booking && bookingId) {
+      axios.get(`/bookings/${bookingId}`)
+        .then(res => setBooking(res.data))
+        .catch(() => navigate("/"));
+    }
+  }, [booking, bookingId, navigate]);
+
+  if (!booking) return null;
 
   const getStatusBadge = () => {
-    if (state.status === "CONFIRMED") {
-      return "bg-success";
-    }
-    if (state.status === "CANCELLED") {
-      return "bg-danger";
-    }
-    return "bg-warning text-dark"; // PENDING_PAYMENT
+    if (booking.status === "CONFIRMED") return "bg-success";
+    if (booking.status === "CANCELLED") return "bg-danger";
+    return "bg-warning text-dark";
   };
 
   return (
     <div className="container mt-5">
       <div className="card shadow p-4 mx-auto" style={{ maxWidth: "600px" }}>
-        
         <h3 className="text-center mb-4">Booking Summary</h3>
 
-        <div className="mb-3">
-          <p><strong>Booking ID:</strong> {state.bookingId}</p>
+        <p><strong>Booking ID:</strong> {booking.id}</p>
 
-          <p>
-            <strong>Status:</strong>{" "}
-            <span className={`badge ${getStatusBadge()}`}>
-              {state.status}
-            </span>
-          </p>
+        <p>
+          <strong>Status:</strong>{" "}
+          <span className={`badge ${getStatusBadge()}`}>
+            {booking.status}
+          </span>
+        </p>
 
-          <p><strong>Seats:</strong> {state.seatIds.join(", ")}</p>
+        <p><strong>Seats:</strong> {booking.seatIds?.join(", ")}</p>
 
-          <p>
-            <strong>Total Amount:</strong>{" "}
-            <span className="fw-bold text-primary">
-              ₹{state.totalAmount}
-            </span>
-          </p>
-        </div>
+        <p>
+          <strong>Total Amount:</strong>{" "}
+          <span className="fw-bold text-primary">
+            ₹{booking.totalAmount}
+          </span>
+        </p>
 
-        <div className="alert alert-info text-center">
-          Please complete payment within 5 minutes to confirm your booking.
-        </div>
+        {booking.status === "PENDING_PAYMENT" && (
+          <>
+            <div className="alert alert-info text-center mt-3">
+              Please complete payment within 5 minutes.
+            </div>
 
-        <div className="d-flex justify-content-between mt-4">
-          
-          <button
-            className="btn btn-outline-secondary"
-            onClick={() => navigate("/")}
-          >
-            Cancel
-          </button>
+            <div className="d-flex justify-content-between mt-4">
+              <button
+                className="btn btn-outline-secondary"
+                onClick={() => navigate("/")}
+              >
+                Cancel
+              </button>
 
-          <button
-            className="btn btn-primary px-4"
-            onClick={() => navigate(`/payment/${state.bookingId}`)}
-          >
-            Proceed to Payment
-          </button>
+              <button
+                className="btn btn-primary px-4"
+                onClick={() => navigate(`/payment/${booking.bookingId}`)}
 
-        </div>
-
+              >
+                Proceed to Payment
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

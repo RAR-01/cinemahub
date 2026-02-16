@@ -32,7 +32,9 @@ function ShowTimings() {
               key={show.id}
               className="btn btn-outline-primary px-4 py-2"
               onClick={() =>
-                navigate(`/screens/${show.screenId}/seats`)
+                navigate(`/screens/${show.screenId}/seats`, {
+                  state: { showId: show.id }   // ✅ PASS SHOW ID HERE
+                })
               }
             >
               {new Date(show.startTime).toLocaleTimeString([], {
