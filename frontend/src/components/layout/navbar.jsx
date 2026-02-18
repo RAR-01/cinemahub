@@ -12,21 +12,31 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
       <div className="container">
 
         {/* Brand */}
-        <Link className="navbar-brand fw-bold" to="/">
+        <Link className="navbar-brand fw-bold fs-4" to="/">
           🎬 CinemaHub
         </Link>
 
-        <div className="collapse navbar-collapse">
-          <ul className="navbar-nav ms-auto align-items-center">
+        {/* Mobile Toggle */}
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        <div className="collapse navbar-collapse" id="navbarContent">
+          <ul className="navbar-nav ms-auto align-items-lg-center gap-2">
 
             {userId ? (
               <>
-                {/* My Bookings Button */}
-                <li className="nav-item me-3">
+                {/* My Bookings */}
+                <li className="nav-item">
                   <button
                     className="btn btn-outline-light btn-sm"
                     onClick={() => navigate("/my-bookings")}
@@ -35,8 +45,8 @@ function Navbar() {
                   </button>
                 </li>
 
-                {/* User Email */}
-                <li className="nav-item me-3 text-light">
+                {/* Email */}
+                <li className="nav-item text-light small px-2">
                   {email}
                 </li>
 
