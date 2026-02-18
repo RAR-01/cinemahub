@@ -16,6 +16,7 @@ import com.cinemahub.backend.repository.ShowRepository;
 import com.cinemahub.backend.repository.TheatreRepository;
 import com.cinemahub.backend.service.ShowSeatService;
 import com.cinemahub.backend.service.ShowService;
+import com.cinemahub.enums.ShowStatus;   // ✅ ADDED
 
 @Service
 public class ShowServiceImpl implements ShowService {
@@ -61,6 +62,8 @@ public class ShowServiceImpl implements ShowService {
         show.setTheatre(theatre);
         show.setStartTime(startTime);
         show.setEndTime(startTime.plusHours(3));
+
+        show.setStatus(ShowStatus.SCHEDULED);   // ✅ ADDED
 
         Show savedShow = showRepository.save(show);
 

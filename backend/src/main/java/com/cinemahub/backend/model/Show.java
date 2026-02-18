@@ -2,6 +2,7 @@ package com.cinemahub.backend.model;
 
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
+import com.cinemahub.enums.ShowStatus;
 
 @Entity
 @Table(
@@ -11,6 +12,7 @@ import jakarta.persistence.*;
     )
 )
 public class Show {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -33,15 +35,21 @@ public class Show {
     @Column(nullable = false)
     private LocalDateTime endTime;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ShowStatus status;
+
     public Show() {
     }
 
-    public Show(Movie movie, Theatre theatre, Screen screen, LocalDateTime startTime, LocalDateTime endTime) {
+    public Show(Movie movie, Theatre theatre, Screen screen,
+                LocalDateTime startTime, LocalDateTime endTime) {
         this.movie = movie;
         this.theatre = theatre;
         this.screen = screen;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.status = ShowStatus.SCHEDULED; // default
     }
 
     public long getId() {
@@ -92,4 +100,11 @@ public class Show {
         this.endTime = endTime;
     }
 
+    public ShowStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ShowStatus status) {
+        this.status = status;
+    }
 }

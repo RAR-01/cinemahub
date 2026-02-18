@@ -3,38 +3,57 @@
   box-sizing: border-box;
 }
 
+html, body, #root {
+  min-height: 100%;
+  background-color: #121212;
+}
+
 body {
   margin: 0;
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, sans-serif;
-  background-color: #f8f9fa;
-  color: #212529;
+  color: #f5f5f5;
 }
 
 /* ===== Typography ===== */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
+  font-weight: 700;
+  color: #E50914;   /* Brand Red */
+  letter-spacing: 0.5px;
+}
+
+p {
+  color: #c2c2c2; /* Slightly brighter for readability */
+}
+
+/* Override Bootstrap muted for dark theme */
+.text-muted {
+  color: #bdbdbd !important;
 }
 
 a {
   text-decoration: none;
+  color: #e50914;
 }
 
 a:hover {
   text-decoration: none;
+  color: #ff2a2a;
 }
 
 /* ===== Cards ===== */
 .card {
+  background-color: #1e1e1e;
   border: none;
   border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: #f5f5f5;
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
 }
 
 /* ===== Buttons ===== */
@@ -45,29 +64,106 @@ a:hover {
   transition: all 0.2s ease-in-out;
 }
 
+/* Primary (Brand Red) */
 .btn-primary {
-  background: linear-gradient(135deg, #0d6efd, #0a58ca);
+  background: linear-gradient(135deg, #e50914, #b20710);
   border: none;
+  color: #fff;
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  background: linear-gradient(135deg, #ff1f1f, #c40812);
+}
+
+/* Outline Primary */
+.btn-outline-primary {
+  color: #e50914;
+  border-color: #e50914;
+}
+
+.btn-outline-primary:hover {
+  background-color: #e50914;
+  color: #fff;
+}
+
+/* Success */
+.btn-success {
+  background-color: #28a745;
+  border: none;
+}
+
+/* Outline Secondary */
+.btn-outline-secondary {
+  color: #f5f5f5;
+  border-color: #444;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #333;
+  border-color: #555;
+}
+
+/* Danger */
+.btn-outline-danger {
+  border-color: #e50914;
+  color: #e50914;
+}
+
+.btn-outline-danger:hover {
+  background-color: #e50914;
+  color: #fff;
 }
 
 /* ===== Forms ===== */
 .form-control {
   border-radius: 10px;
   padding: 10px;
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  color: #ffffff;
 }
 
 .form-control:focus {
-  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border-color: #e50914;
+  box-shadow: 0 0 0 0.15rem rgba(229, 9, 20, 0.25);
+}
+
+/* ===== Tables ===== */
+.table {
+  color: #f5f5f5;
+}
+
+.table thead {
+  background-color: #1e1e1e;
+}
+
+.table tbody tr {
+  border-color: #333;
+}
+
+/* ===== Alerts ===== */
+.alert {
+  border-radius: 12px;
+}
+
+/* ===== Badges ===== */
+.badge {
+  font-weight: 500;
+  border-radius: 8px;
 }
 
 /* ===== Layout Helpers ===== */
 .section-title {
   font-weight: 700;
   margin-bottom: 1.5rem;
+}
+
+/* ===== Text Selection (Brand Styled) ===== */
+::selection {
+  background: #e50914;
+  color: #ffffff;
 }
 
 /* ===== Smooth Animations ===== */

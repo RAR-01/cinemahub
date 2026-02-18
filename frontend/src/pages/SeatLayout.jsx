@@ -20,15 +20,17 @@ function SeatLayout() {
       return;
     }
 
-    getSeatsByScreen(screenId).then(res => setSeats(res.data));
+    getSeatsByScreen(screenId).then((res) =>
+      setSeats(res.data)
+    );
   }, [screenId, showId, navigate]);
 
   const toggleSeat = (seat) => {
     if (seat.seatStatus !== "AVAILABLE") return;
 
-    setSelected(prev =>
+    setSelected((prev) =>
       prev.includes(seat.id)
-        ? prev.filter(id => id !== seat.id)
+        ? prev.filter((id) => id !== seat.id)
         : [...prev, seat.id]
     );
   };
@@ -40,77 +42,138 @@ function SeatLayout() {
         return;
       }
 
-      if (!showId) {
-        alert("Show ID missing.");
-        return;
-      }
-
       await lockSeats(selected);
-
       const res = await createBooking(showId, selected);
 
       navigate(`/booking/${res.data.id}`, {
-        state: res.data
+        state: res.data,
       });
-
     } catch (err) {
       alert(
         err.response?.data?.message ||
-        "Seat already booked or lock expired"
+          "Seat already booked or lock expired"
       );
     }
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Select Seats</h2>
+    <div className="container py-5">
 
-      <div className="row justify-content-center">
-        <div className="col-md-8">
-          <div
-            className="d-grid gap-2"
-            style={{ gridTemplateColumns: "repeat(8, 1fr)" }}
-          >
-            {seats.map(seat => {
+      {/* Header */}
+      <div className="text-center mb-4">
+        <h2 className="fw-bold">Select Seats</h2>
+        <p className="text-muted">
+          Choose your preferred seats
+        </p>
+      </div>
 
-              let btnClass = "btn ";
+      {/* Screen Indicator */}
+      <div className="text-center mb-4">
+        <div
+          className="mx-auto mb-2"
+          style={{
+            height: "8px",
+            width: "60%",
+            background:
+              "linear-gradient(to right, #ccc, #eee, #ccc)",
+            borderRadius: "50px",
+          }}
+        />
+        <small className="text-muted">SCREEN THIS WAY</small>
+      </div>
 
-              if (seat.seatStatus === "BOOKED") {
-                btnClass += "btn-secondary";
-              } else if (selected.includes(seat.id)) {
-                btnClass += "btn-warning";
-              } else {
-                btnClass += "btn-success";
-              }
+      {/* Seat Grid */}
+      <div className="d-flex justify-content-center">
+        <div
+          className="d-grid"
+          style={{
+            gridTemplateColumns: "repeat(8, 40px)",
+            gap: "10px",
+          }}
+        >
+          {seats.map((seat) => {
+            let bgColor = "#28a745"; // available (green)
 
-              return (
-                <button
-                  key={seat.id}
-                  disabled={seat.seatStatus !== "AVAILABLE"}
-                  onClick={() => toggleSeat(seat)}
-                  className={btnClass}
-                >
-                  {seat.seatNumber}
-                </button>
-              );
-            })}
-          </div>
+            if (seat.seatStatus === "BOOKED") {
+              bgColor = "#6c757d"; // grey
+            } else if (selected.includes(seat.id)) {
+              bgColor = "#ffc107"; // yellow
+            }
+
+            return (
+              <button
+                key={seat.id}
+                disabled={seat.seatStatus !== "AVAILABLE"}
+                onClick={() => toggleSeat(seat)}
+                style={{
+                  height: "40px",
+                  width: "40px",
+                  borderRadius: "6px",
+                  border: "1px solid #ddd",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                  backgroundColor: bgColor,
+                  color:
+                    selected.includes(seat.id)
+                      ? "#000"
+                      : "#fff",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                {seat.seatNumber}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <div className="mt-4 text-center">
-        <span className="badge bg-success me-2">Available</span>
-        <span className="badge bg-warning text-dark me-2">Selected</span>
-        <span className="badge bg-secondary">Booked</span>
+      {/* Legend */}
+      <div className="d-flex justify-content-center gap-4 mt-5">
+        <div className="d-flex align-items-center gap-2">
+          <div
+            style={{
+              height: "18px",
+              width: "18px",
+              backgroundColor: "#28a745",
+              borderRadius: "4px",
+            }}
+          />
+          <small>Available</small>
+        </div>
+
+        <div className="d-flex align-items-center gap-2">
+          <div
+            style={{
+              height: "18px",
+              width: "18px",
+              backgroundColor: "#ffc107",
+              borderRadius: "4px",
+            }}
+          />
+          <small>Selected</small>
+        </div>
+
+        <div className="d-flex align-items-center gap-2">
+          <div
+            style={{
+              height: "18px",
+              width: "18px",
+              backgroundColor: "#6c757d",
+              borderRadius: "4px",
+            }}
+          />
+          <small>Booked</small>
+        </div>
       </div>
 
+      {/* CTA */}
       {selected.length > 0 && (
-        <div className="text-center mt-4">
+        <div className="text-center mt-5">
           <button
-            className="btn btn-primary px-4"
+            className="btn btn-primary btn-lg px-5"
             onClick={lockAndCreateBooking}
           >
-            Proceed to Booking
+            Proceed to Booking ({selected.length})
           </button>
         </div>
       )}

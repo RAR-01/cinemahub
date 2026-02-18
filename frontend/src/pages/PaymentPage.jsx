@@ -15,12 +15,13 @@ function PaymentPage() {
   useEffect(() => {
     if (!bookingId) return;
 
-    axios.post(`/payments/initiate/${bookingId}`)
-      .then(res => {
+    axios
+      .post(`/payments/initiate/${bookingId}`)
+      .then((res) => {
         setPayment(res.data);
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         alert("Payment initiation failed");
         navigate("/");
@@ -32,7 +33,7 @@ function PaymentPage() {
     if (!payment) return;
 
     const timer = setInterval(() => {
-      setTimeLeft(prev => {
+      setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
           handleFailure();
@@ -55,9 +56,9 @@ function PaymentPage() {
     try {
       setProcessing(true);
 
-      await axios.post(`/payments/${payment.paymentId}/success`);
-
-      alert("Payment successful!");
+      await axios.post(
+        `/payments/${payment.paymentId}/success`
+      );
 
       navigate(`/booking/${bookingId}`);
     } catch (err) {
@@ -69,8 +70,9 @@ function PaymentPage() {
 
   const handleFailure = async () => {
     try {
-      await axios.post(`/payments/${payment.paymentId}/failure`);
-      alert("Payment failed");
+      await axios.post(
+        `/payments/${payment.paymentId}/failure`
+      );
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -79,38 +81,68 @@ function PaymentPage() {
 
   if (loading) {
     return (
-      <div className="container mt-5 text-center">
-        <div className="spinner-border text-primary"></div>
-        <p className="mt-3">Initiating Payment...</p>
+      <div className="container py-5 text-center">
+        <div
+          className="spinner-border text-primary"
+          style={{ width: "3rem", height: "3rem" }}
+        />
+        <p className="mt-4 fs-5 text-muted">
+          Initiating payment...
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="container mt-5">
-      <div className="card shadow p-4 mx-auto" style={{ maxWidth: "500px" }}>
-        <h3 className="text-center mb-3">Payment</h3>
-
-        <p><strong>Booking ID:</strong> {payment.bookingId}</p>
-
-        <p>
-          <strong>Amount:</strong>{" "}
-          <span className="fw-bold text-primary">
-            ₹{payment.amount}
-          </span>
-        </p>
-
-        <div className="alert alert-warning text-center">
-          ⏳ Time Remaining: <strong>{formatTime()}</strong>
+    <div className="container py-5 d-flex justify-content-center">
+      <div
+        className="card border-0 shadow-lg p-4"
+        style={{ maxWidth: "500px", width: "100%" }}
+      >
+        {/* Header */}
+        <div className="text-center mb-4">
+          <h3 className="fw-bold">Secure Payment</h3>
+          <p className="text-muted mb-0">
+            Complete your booking
+          </p>
         </div>
 
-        <div className="d-flex justify-content-between mt-3">
+        <hr />
+
+        {/* Booking Info */}
+        <div className="mb-3">
+          <p className="mb-2">
+            <strong>Booking ID:</strong>{" "}
+            {payment.bookingId}
+          </p>
+        </div>
+
+        {/* Amount */}
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <span className="fw-semibold fs-5">
+            Amount Payable
+          </span>
+          <span className="fw-bold fs-3 text-primary">
+            ₹{payment.amount}
+          </span>
+        </div>
+
+        {/* Timer */}
+        <div className="alert alert-warning text-center">
+          ⏳ Time Remaining:{" "}
+          <strong className="fs-5">
+            {formatTime()}
+          </strong>
+        </div>
+
+        {/* Buttons */}
+        <div className="d-grid gap-3 mt-3">
           <button
-            className="btn btn-success"
+            className="btn btn-success btn-lg"
             onClick={handleSuccess}
             disabled={processing || timeLeft === 0}
           >
-            Pay Now
+            {processing ? "Processing..." : "Pay Now"}
           </button>
 
           <button
@@ -118,7 +150,7 @@ function PaymentPage() {
             onClick={handleFailure}
             disabled={processing}
           >
-            Cancel
+            Cancel Payment
           </button>
         </div>
       </div>

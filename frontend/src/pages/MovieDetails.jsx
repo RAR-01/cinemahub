@@ -13,15 +13,18 @@ function MovieDetails() {
 
   useEffect(() => {
     getMovieById(movieId)
-      .then(res => setMovie(res.data))
-      .catch(err => console.error(err));
+      .then((res) => setMovie(res.data))
+      .catch((err) => console.error(err));
   }, [movieId]);
 
   if (!movie) {
     return (
-      <div className="container mt-5 text-center">
-        <div className="spinner-border text-primary"></div>
-        <p className="mt-3">Loading...</p>
+      <div className="container py-5 text-center">
+        <div
+          className="spinner-border text-primary"
+          style={{ width: "3rem", height: "3rem" }}
+        />
+        <p className="mt-4 fs-5 text-muted">Loading movie details...</p>
       </div>
     );
   }
@@ -31,34 +34,56 @@ function MovieDetails() {
     : FALLBACK_POSTER;
 
   return (
-    <div className="container mt-5">
-      <div className="row">
-        
-        <div className="col-md-4 text-center">
+    <div className="container py-5">
+      <div className="row align-items-start g-5">
+
+        {/* Poster */}
+        <div className="col-12 col-md-4 text-center">
           <img
             src={posterUrl}
             alt={movie.title}
-            className="img-fluid rounded shadow"
+            className="img-fluid rounded-3 shadow"
+            style={{ maxHeight: "520px", objectFit: "cover" }}
           />
         </div>
 
-        <div className="col-md-8">
-          <h2 className="mb-3">{movie.title}</h2>
+        {/* Details */}
+        <div className="col-12 col-md-8">
 
-          <p><strong>Genre:</strong> {movie.genre}</p>
-          <p><strong>Rating:</strong> ⭐ {movie.rating}</p>
-          <p><strong>Language:</strong> {movie.language}</p>
-          <p><strong>Duration:</strong> {movie.duration} mins</p>
-          <p className="mt-3">{movie.description}</p>
+          <h2 className="fw-bold mb-3">{movie.title}</h2>
 
-          <button
-            className="btn btn-primary mt-4"
-            onClick={() => navigate(`/movies/${movieId}/theatres`)}
-          >
-            Book Tickets
-          </button>
+          {/* Metadata badges */}
+          <div className="mb-4 d-flex flex-wrap gap-2">
+            <span className="badge bg-secondary">
+              🎬 {movie.genre}
+            </span>
+            <span className="badge bg-warning text-dark">
+              ⭐ {movie.rating}
+            </span>
+            <span className="badge bg-info text-dark">
+              🌐 {movie.language}
+            </span>
+            <span className="badge bg-dark">
+              ⏱ {movie.duration} mins
+            </span>
+          </div>
+
+          {/* Description */}
+          <p className="text-muted fs-6 lh-lg">
+            {movie.description}
+          </p>
+
+          {/* CTA */}
+          <div className="mt-4">
+            <button
+              className="btn btn-primary btn-lg px-4"
+              onClick={() => navigate(`/movies/${movieId}/theatres`)}
+            >
+              Book Tickets
+            </button>
+          </div>
+
         </div>
-
       </div>
     </div>
   );

@@ -12,11 +12,18 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
+    <nav
+      className="navbar navbar-expand-lg navbar-dark shadow-sm py-3"
+      style={{ backgroundColor: "#121212" }}
+    >
       <div className="container">
 
         {/* Brand */}
-        <Link className="navbar-brand fw-bold fs-4" to="/">
+        <Link
+          className="navbar-brand fw-bold fs-4"
+          to="/"
+          style={{ color: "#E50914", letterSpacing: "1px" }}
+        >
           🎬 CinemaHub
         </Link>
 
@@ -31,14 +38,14 @@ function Navbar() {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarContent">
-          <ul className="navbar-nav ms-auto align-items-lg-center gap-2">
+          <ul className="navbar-nav ms-auto align-items-lg-center gap-3">
 
             {userId ? (
               <>
                 {/* My Bookings */}
                 <li className="nav-item">
                   <button
-                    className="btn btn-outline-light btn-sm"
+                    className="btn btn-outline-light btn-sm px-3"
                     onClick={() => navigate("/my-bookings")}
                   >
                     My Bookings
@@ -46,14 +53,17 @@ function Navbar() {
                 </li>
 
                 {/* Email */}
-                <li className="nav-item text-light small px-2">
+                <li
+                  className="nav-item small"
+                  style={{ color: "#B0B0B0" }}
+                >
                   {email}
                 </li>
 
                 {/* Logout */}
                 <li className="nav-item">
                   <button
-                    className="btn btn-outline-danger btn-sm"
+                    className="btn btn-outline-danger btn-sm px-3"
                     onClick={handleLogout}
                   >
                     Logout
@@ -62,7 +72,10 @@ function Navbar() {
               </>
             ) : (
               <li className="nav-item">
-                <Link className="btn btn-outline-light btn-sm" to="/login">
+                <Link
+                  className="btn btn-primary btn-sm px-4"
+                  to="/login"
+                >
                   Login
                 </Link>
               </li>
