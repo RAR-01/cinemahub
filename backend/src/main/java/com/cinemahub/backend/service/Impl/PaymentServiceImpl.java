@@ -37,7 +37,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment initiatePayment(Long bookingId) {
 
-        Booking booking = bookingRepository.findById(bookingId)
+        // 🔒 Lock booking row to prevent race condition
+        Booking booking = bookingRepository.findByIdForUpdate(bookingId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Booking not found")
                 );
@@ -46,27 +47,31 @@ public class PaymentServiceImpl implements PaymentService {
             throw new ConflictException("Booking not eligible for payment");
         }
 
-        return paymentRepository.findByBookingId(bookingId)
-                .orElseGet(() -> {
+        // If payment already exists → return it
+        Payment existingPayment = paymentRepository.findByBookingId(bookingId)
+                .orElse(null);
 
-                    Payment payment = new Payment();
-                    payment.setBooking(booking);
+        if (existingPayment != null) {
+            return existingPayment;
+        }
 
-                    Double amount = booking.getTotalAmount();
-                    if (amount == null) {
-                        throw new ConflictException("Booking total amount is not set");
-                    }
+        Payment payment = new Payment();
+        payment.setBooking(booking);
 
-                    payment.setAmount(amount);
-                    payment.setStatus(PaymentStatus.INITIATED);
+        Double amount = booking.getTotalAmount();
+        if (amount == null) {
+            throw new ConflictException("Booking total amount is not set");
+        }
 
-                    LocalDateTime now = LocalDateTime.now();
-                    payment.setCreatedAt(now);
-                    payment.setUpdatedAt(now);
-                    payment.setExpiresAt(now.plusMinutes(5));
+        payment.setAmount(amount);
+        payment.setStatus(PaymentStatus.INITIATED);
 
-                    return paymentRepository.save(payment);
-                });
+        LocalDateTime now = LocalDateTime.now();
+        payment.setCreatedAt(now);
+        payment.setUpdatedAt(now);
+        payment.setExpiresAt(now.plusMinutes(5));
+
+        return paymentRepository.save(payment);
     }
 
     @Override
@@ -77,12 +82,10 @@ public class PaymentServiceImpl implements PaymentService {
                         new ResourceNotFoundException("Payment not found")
                 );
 
-        // If already success → just return (NO ERROR)
         if (payment.getStatus() == PaymentStatus.SUCCESS) {
             return;
         }
 
-        //  If already failed → cannot succeed
         if (payment.getStatus() == PaymentStatus.FAILED) {
             throw new ConflictException("Payment already failed");
         }
@@ -121,12 +124,10 @@ public class PaymentServiceImpl implements PaymentService {
                         new ResourceNotFoundException("Payment not found")
                 );
 
-        // ✅ If already failed → do nothing
         if (payment.getStatus() == PaymentStatus.FAILED) {
             return;
         }
 
-        // ❌ If already success → cannot fail
         if (payment.getStatus() == PaymentStatus.SUCCESS) {
             throw new ConflictException("Payment already completed");
         }
